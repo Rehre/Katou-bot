@@ -1,7 +1,7 @@
 {
-  "name": "katou-linebot",
+  "name": "katou-bot",
   "version": "1.0.0",
-  "description": "Katou-LINEBot",
+  "description": "Katou-Bot",
   "main": "src/bot.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -14,5 +14,9 @@
     "Javascript"
   ],
   "author": "Akmal Maulana Azzam",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@line/bot-sdk": "^6.3.0",
+    "express": "^4.16.4"
+  }
 }
