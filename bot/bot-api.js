@@ -1,5 +1,7 @@
 import rp from "request-promise";
 import gis from "g-i-s";
+import youtubeSearch from "youtube-search";
+import ytdlCore from "ytdl-core";
 
 import constants from "./constants";
 
@@ -119,18 +121,80 @@ export default class BotApi {
     }
   }
 
-  async getVideo(keyword) {}
+  getVideo(keyword) {
+    return new Promise((resolve, reject) => {
+      let options = {
+        maxResults: 5,
+        order: "relevance",
+        type: "video",
+        safeSearch: "strict",
+        key: constants.GOOGLECLOUDAPI_KEY
+      };
+
+      youtubeSearch(keyword, options, (err, result) => {
+        if (err || result == undefined || result == [] || result.length <= 0) {
+          reject("Video tidak ditemukan atau LIMIT");
+        } else {
+          let randomIndex = Math.round(Math.random() * result.length);
+          let resultVideo = {
+            link: result[randomIndex].link,
+            title: result[randomIndex].title,
+            thumbnail: result[randomIndex].thumbnails.default.url
+          };
+
+          ytdlCore.getInfo(resultVideo.link, {}, (err, info) => {
+            if (err) {
+              resultVideo.videoUrl = "undefined";
+              resolve(resultVideo);
+            } else if (info == undefined) {
+              resultVideo.videoUrl = "undefined";
+              resolve(resultVideo);
+            } else {
+              for (let i = 0; i < info.formats.length; i++) {
+                if (info.formats[i].container === "mp4") {
+                  resultVideo.videoUrl = info.formats[i].url;
+
+                  resolve(resultVideo);
+                  break;
+                }
+              }
+            }
+          });
+        }
+      });
+    });
+  }
+
+  async translateText(text, lang) {
+    try {
+      const response = await rp({
+        uri: `${constants.YANDEXTRANSLATE_URL}${constants.YANDEXTRANSLATE_KEY}${
+          constants.YANDEXTEXT_QUERY
+        }${text}${constants.YANDEXLANG_QUERY}${lang}${
+          constants.YANDEX_OTHERQUERY
+        }`
+      });
+
+      if (!response) throw new Error('Error fetching');
+
+      return`${response}`.match(/<text>.*?<\/text>/g)[0].replace(/<text>|<\/text>/g, '');
+    } catch (err) {
+      throw new Error(
+        `Request gagal atau kode bahasa tidak ditemukan ERR: ${err}`
+      );
+    }
+  }
 }
 
 const botApi = new BotApi();
 console.time("time to response");
 botApi
-  .getImageUrl("bekasi")
+  .translateText("you are", "en-id")
   .then(result => {
     console.log(result);
     console.timeEnd("time to response");
   })
   .catch(error => {
     console.log(error);
-    console.timeEnd();
+    console.timeEnd("time to response");
   });
