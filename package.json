@@ -1,10 +1,12 @@
 {
-  "name": "katou-linebot",
+  "name": "katou-bot",
   "version": "1.0.0",
-  "description": "Katou-LINEBot",
-  "main": "src/bot.js",
+  "description": "Katou-Bot",
+  "main": "build/bot/bot.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./build/bot/bot.js",
+    "build": "babel ./bot -d ./build/bot",
+    "dev:bot-api": "nodemon --watch ./bot/bot-api.js --exec babel-node ./bot/bot-api.js"
   },
   "keywords": [
     "Chat",
@@ -14,5 +16,24 @@
     "Javascript"
   ],
   "author": "Akmal Maulana Azzam",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@babel/runtime": "^7.1.5",
+    "@line/bot-sdk": "6.3.0",
+    "animequote": "1.1.1",
+    "express": "4.16.4",
+    "g-i-s": "2.1.2",
+    "osu": "2.0.0",
+    "request-promise": "4.2.2",
+    "youtube-search": "1.1.3",
+    "ytdl-core": "0.28.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "7.1.5",
+    "@babel/core": "7.1.5",
+    "@babel/node": "7.0.0",
+    "@babel/plugin-transform-runtime": "7.1.0",
+    "@babel/preset-env": "7.1.5",
+    "nodemon": "1.18.6"
+  }
 }
