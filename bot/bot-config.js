@@ -1,6 +1,6 @@
 export default {
   line: {
-    channelAccessToken: process.env.LINE_BOT_CHANNEL_ACCESS_TOKEN,
-    channelSecret: process.env.LINE_BOT_CHANNEL_SECRET
+    channelAccessToken: JSON.stringify(process.env.LINE_BOT_CHANNEL_ACCESS_TOKEN),
+    channelSecret: JSON.stringify(process.env.LINE_BOT_CHANNEL_SECRET)
   }
 };
