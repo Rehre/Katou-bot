@@ -2,6 +2,8 @@ import rp from "request-promise";
 import gis from "g-i-s";
 import youtubeSearch from "youtube-search";
 import ytdlCore from "ytdl-core";
+import animequote from "animequote";
+import * as osu from "osu";
 
 import constants from "./constants";
 
@@ -273,7 +275,7 @@ export default class BotApi {
         }
       });
 
-      if (!response) throw new Error('Error fetching: response');
+      if (!response) throw new Error("Error fetching: response");
 
       return response;
     } catch (err) {
@@ -282,17 +284,90 @@ export default class BotApi {
       );
     }
   }
-}
 
-const botApi = new BotApi();
-console.time("time to response");
-botApi
-  .getLoveMeter("katou lovemeter rehre:katou")
-  .then(result => {
-    console.log(result);
-    console.timeEnd("time to response");
-  })
-  .catch(error => {
-    console.log(error);
-    console.timeEnd("time to response");
-  });
+  getAnimeQuote() {
+    return animequote();
+  }
+
+  getOsuProfile(keyword, mode) {
+    return new Promise((resolve, reject) => {
+      const osuApi = osu.api(constants.OSUAPI_KEY);
+
+      let resultProfile;
+      let resultBest;
+      let deskripsi_profil;
+      let deskripsi_best;
+
+      osuApi
+        .getUser({ u: keyword, m: mode })
+        .then(resultProfiles => {
+          resultProfile = resultProfiles;
+
+          return osuApi.getUserBest({ u: keyword, m: mode, limit: 1 });
+        })
+        .then(resultBests => {
+          resultBest = resultBests;
+
+          deskripsi_profil =
+            "Level : " +
+            Math.floor(parseInt(resultProfile[0].level)) +
+            "    Acc : " +
+            Math.floor(parseInt(resultProfile[0].accuracy)) +
+            "%\nRank : " +
+            resultProfile[0].pp_rank +
+            "\nPP :" +
+            resultProfile[0].pp_raw;
+
+          if (resultBest[0].length === 0) {
+            resolve({
+              withBeatmap: false,
+              userId: resultProfile[0].user_id,
+              username: resultProfile[0].username,
+              deskripsi_profil
+            });
+          }
+
+          return osuApi.getBeatmaps({ b: resultBest[0].beatmap_id, limit: 1 });
+        })
+        .then(resultBeatmap => {
+          const beatmapTitle = resultBeatmap[0].title;
+
+          if (beatmapTitle.length > 26) {
+            beatmapTitle = beatmapTitle.substr(0, 26) + "...";
+          }
+
+          deskripsi_best =
+            beatmapTitle +
+            "\nScore : " +
+            resultBest[0].score +
+            "\nPP : " +
+            Math.floor(parseInt(resultBest[0].pp));
+          resolve({
+            withBeatmap: true,
+            user_id: resultProfile[0].user_id,
+            username: resultProfile[0].username,
+            deskripsi_profil,
+            beatmapset_id: resultBeatmap[0].beatmapset_id,
+            deskripsi_best
+          });
+        })
+        .catch(err => {
+          reject("Request gagal atau tidak dapat menemukan user osu!");
+        });
+    });
+  }
+}
+// for development
+// const botApi = new BotApi();
+// console.time("time to response");
+// console.log(botApi.getAnimeQuote())
+// botApi
+//   .getOsuProfile("rehre", 2)
+//   .then(result => {
+//     console.log(result);
+//     console.timeEnd("time to response");
+//   })
+//   .catch(error => {
+//     console.log(error);
+//     console.timeEnd("time to response");
+//   });
