@@ -66,7 +66,7 @@ export default class BotApi {
       }
     } catch (err) {
       throw new Error(
-        `Request gagal atau halaman wikipedia tidak ditemukan ERR:${err}`
+        `Request gagal atau halaman wikipedia tidak ditemukan ERR: ${err}`
       );
     }
   }
@@ -175,12 +175,43 @@ export default class BotApi {
         }`
       });
 
-      if (!response) throw new Error('Error fetching');
+      if (!response) throw new Error("Error fetching");
 
-      return`${response}`.match(/<text>.*?<\/text>/g)[0].replace(/<text>|<\/text>/g, '');
+      return `${response}`
+        .match(/<text>.*?<\/text>/g)[0]
+        .replace(/<text>|<\/text>/g, "");
     } catch (err) {
       throw new Error(
         `Request gagal atau kode bahasa tidak ditemukan ERR: ${err}`
+      );
+    }
+  }
+
+  async getLocation(keyword) {
+    try {
+      const encodedKeyword = encodeURI(keyword);
+
+      const response = await rp({
+        uri: `${constants.GMAPSJS_URL}${encodedKeyword}${constants.GMAPSJS_QUERY}${
+          constants.GMAPSJS_KEY
+        }`,
+        json: true
+      });
+
+      if (!response) throw new Error("Error fetch");
+      
+      const formatted_address = response.results[0].formatted_address;
+      const latitude = response.results[0].geometry.location.lat;
+      const longitude = response.results[0].geometry.location.lng;
+
+      if (formatted_address.length > 100) {
+        formatted_address = formatted_address.substr(0, 90) + "...";
+      }
+
+      return { formatted_address, latitude, longitude };
+    } catch (err) {
+      throw new Error(
+        `Request gagal atau tidak dapat menemukan lokasi ERR: ${err}`
       );
     }
   }
@@ -189,7 +220,7 @@ export default class BotApi {
 const botApi = new BotApi();
 console.time("time to response");
 botApi
-  .translateText("you are", "en-id")
+  .getLocation("bekasi")
   .then(result => {
     console.log(result);
     console.timeEnd("time to response");
