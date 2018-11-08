@@ -41,7 +41,7 @@ export default class BotApi {
         json: true
       });
 
-      if (!response) throw new Error("Error fetching");
+      if (!response) throw new Error("Error fetching: response");
       const pages = response.query.pages;
       const urlForText = `https://id.wikipedia.org/wiki/${keywordEncoded}`;
 
@@ -101,7 +101,7 @@ export default class BotApi {
         json: true
       });
 
-      if (!response) throw new Error("Error fetching");
+      if (!response) throw new Error("Error fetching: response");
 
       const resultData = {
         cityName: response.name,
@@ -182,7 +182,7 @@ export default class BotApi {
         }`
       });
 
-      if (!response) throw new Error("Error fetching");
+      if (!response) throw new Error("Error fetching: response");
 
       return `${response}`
         .match(/<text>.*?<\/text>/g)[0]
@@ -255,12 +255,39 @@ export default class BotApi {
       );
     });
   }
+
+  async getLoveMeter(keyword) {
+    try {
+      const signPosition = keyword.indexOf(":");
+      const person1 = keyword.substr(16, signPosition - 16);
+      const person2 = keyword.substr(signPosition + 1);
+
+      const response = await rp({
+        uri: `${constants.MASHAPE_LOVEMETERURL}${person1}${
+          constants.MASHAPE_LOVEMETERQUERY
+        }${person2}`,
+        json: true,
+        headers: {
+          "X-Mashape-Key": `${constants.MASHAPE_APPKEY}`,
+          Accept: "application/json"
+        }
+      });
+
+      if (!response) throw new Error('Error fetching: response');
+
+      return response;
+    } catch (err) {
+      throw new Error(
+        `Request gagal atau tidak dapat menghitung persentase pasangan ERR: ${err}`
+      );
+    }
+  }
 }
 
 const botApi = new BotApi();
 console.time("time to response");
 botApi
-  .getLocation("bekasi")
+  .getLoveMeter("katou lovemeter rehre:katou")
   .then(result => {
     console.log(result);
     console.timeEnd("time to response");
