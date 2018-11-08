@@ -14,7 +14,7 @@ app.set("PORT", process.env.PORT || 3000);
 // -- START LINE BOT SETUP --
 
 // setup the event handler for LINE
-const lineEventHandler = new LineEventHandler(LineClient(botConfig.line));
+const lineEventHandler = new LineEventHandler(new LineClient(botConfig.line));
 
 // listen to the API post /webhook_line for getting the LINE response
 app.post("/webhook_line", LineMiddleware(botConfig.line), (req, res) => {

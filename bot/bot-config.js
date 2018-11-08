@@ -1,6 +1,6 @@
 export default {
   line: {
-    channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
-    channelSecret: process.env.CHANNEL_SECRET
+    channelAccessToken: process.env.LINE_BOT_CHANNEL_ACCESS_TOKEN,
+    channelSecret: process.env.LINE_BOT_CHANNEL_SECRET
   }
 };
