@@ -123,45 +123,52 @@ export default class BotApi {
 
   getVideo(keyword) {
     return new Promise((resolve, reject) => {
-      let options = {
-        maxResults: 5,
-        order: "relevance",
-        type: "video",
-        safeSearch: "strict",
-        key: constants.GOOGLECLOUDAPI_KEY
-      };
+      youtubeSearch(
+        keyword,
+        {
+          maxResults: 5,
+          order: "relevance",
+          type: "video",
+          safeSearch: "strict",
+          key: constants.GOOGLECLOUDAPI_KEY
+        },
+        (err, result) => {
+          if (
+            err ||
+            result == undefined ||
+            result == [] ||
+            result.length <= 0
+          ) {
+            reject("Video tidak ditemukan atau LIMIT");
+          } else {
+            let randomIndex = Math.round(Math.random() * result.length);
+            let resultVideo = {
+              link: result[randomIndex].link,
+              title: result[randomIndex].title,
+              thumbnail: result[randomIndex].thumbnails.default.url
+            };
 
-      youtubeSearch(keyword, options, (err, result) => {
-        if (err || result == undefined || result == [] || result.length <= 0) {
-          reject("Video tidak ditemukan atau LIMIT");
-        } else {
-          let randomIndex = Math.round(Math.random() * result.length);
-          let resultVideo = {
-            link: result[randomIndex].link,
-            title: result[randomIndex].title,
-            thumbnail: result[randomIndex].thumbnails.default.url
-          };
+            ytdlCore.getInfo(resultVideo.link, {}, (err, info) => {
+              if (err) {
+                resultVideo.videoUrl = "undefined";
+                resolve(resultVideo);
+              } else if (info == undefined) {
+                resultVideo.videoUrl = "undefined";
+                resolve(resultVideo);
+              } else {
+                for (let i = 0; i < info.formats.length; i++) {
+                  if (info.formats[i].container === "mp4") {
+                    resultVideo.videoUrl = info.formats[i].url;
 
-          ytdlCore.getInfo(resultVideo.link, {}, (err, info) => {
-            if (err) {
-              resultVideo.videoUrl = "undefined";
-              resolve(resultVideo);
-            } else if (info == undefined) {
-              resultVideo.videoUrl = "undefined";
-              resolve(resultVideo);
-            } else {
-              for (let i = 0; i < info.formats.length; i++) {
-                if (info.formats[i].container === "mp4") {
-                  resultVideo.videoUrl = info.formats[i].url;
-
-                  resolve(resultVideo);
-                  break;
+                    resolve(resultVideo);
+                    break;
+                  }
                 }
               }
-            }
-          });
+            });
+          }
         }
-      });
+      );
     });
   }
 
@@ -192,14 +199,15 @@ export default class BotApi {
       const encodedKeyword = encodeURI(keyword);
 
       const response = await rp({
-        uri: `${constants.GMAPSJS_URL}${encodedKeyword}${constants.GMAPSJS_QUERY}${
-          constants.GMAPSJS_KEY
-        }`,
+        uri: `${constants.GMAPSJS_URL}${encodedKeyword}${
+          constants.GMAPSJS_QUERY
+        }${constants.GMAPSJS_KEY}`,
         json: true
       });
 
-      if (!response) throw new Error("Error fetch");
-      
+      if (!response) throw new Error("Error Fetching: response");
+      if (!response.result) throw new Error("Error Fetching: result");
+
       const formatted_address = response.results[0].formatted_address;
       const latitude = response.results[0].geometry.location.lat;
       const longitude = response.results[0].geometry.location.lng;
@@ -214,6 +222,38 @@ export default class BotApi {
         `Request gagal atau tidak dapat menemukan lokasi ERR: ${err}`
       );
     }
+  }
+
+  getYoutubeUrl(keyword) {
+    return new Promise((resolve, reject) => {
+      youtubeSearch(
+        keyword,
+        {
+          maxResults: 5,
+          order: "relevance",
+          type: "video",
+          safeSearch: "strict",
+          key: constants.GOOGLECLOUDAPI_KEY
+        },
+        (err, result) => {
+          if (
+            err ||
+            result == undefined ||
+            result == [] ||
+            result.length <= 0
+          ) {
+            reject("Video tidak ditemukan atau LIMIT");
+          } else {
+            let resultVideo = {
+              link: result[0].link,
+              title: result[0].title
+            };
+
+            resolve(resultVideo);
+          }
+        }
+      );
+    });
   }
 }
 
