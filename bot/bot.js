@@ -10,8 +10,6 @@ import LineEventHandler from "./event-handler/line";
 
 // server setup
 const app = express();
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 app.set("PORT", process.env.PORT || 3000);
 
 // -- START LINE BOT SETUP --
@@ -31,13 +29,15 @@ app.post("/webhook_line", LineMiddleware(botConfig.line), (req, res) => {
 
 // -- START TELEGRAM BOT SETUP --
 
-app.post(`/${botConfig.telegram.token}`, (req, res) => {
+app.post(`/${botConfig.telegram.token}`, bodyParser.json(), (req, res) => {
   res.header("Content-Type", "application/json");
-  res.status(200).send({
-    method: "sendMessage",
-    chat_id: "@Rehre",
-    text: "hello"
-  });
+  res.status(200).send(
+    JSON.stringify({
+      method: "sendMessage",
+      chat_id: "@Rehre",
+      text: "hello"
+    })
+  );
 
   console.log(req);
   console.log(req.body);

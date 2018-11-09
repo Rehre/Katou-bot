@@ -14,10 +14,6 @@ var _line = _interopRequireDefault(require("./event-handler/line"));
 
 // server setup
 var app = (0, _express.default)();
-app.use(_bodyParser.default.json());
-app.use(_bodyParser.default.urlencoded({
-  extended: true
-}));
 app.set("PORT", process.env.PORT || 3000); // -- START LINE BOT SETUP --
 // setup the event handler for LINE
 
@@ -31,13 +27,13 @@ app.post("/webhook_line", (0, _botSdk.middleware)(_botConfig.default.line), func
 }); // -- END LINE BOT SETUP --
 // -- START TELEGRAM BOT SETUP --
 
-app.post("/".concat(_botConfig.default.telegram.token), function (req, res) {
+app.post("/".concat(_botConfig.default.telegram.token), _bodyParser.default.json(), function (req, res) {
   res.header("Content-Type", "application/json");
-  res.status(200).send({
+  res.status(200).send(JSON.stringify({
     method: "sendMessage",
     chat_id: "@Rehre",
     text: "hello"
-  });
+  }));
   console.log(req);
   console.log(req.body);
 }); // -- END TELEGRAM BOT SETUP --
