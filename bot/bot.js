@@ -26,6 +26,16 @@ app.post("/webhook_line", LineMiddleware(botConfig.line), (req, res) => {
 
 // -- END LINE BOT SETUP --
 
+// -- START TELEGRAM BOT SETUP --
+
+app.post(botConfig.telegram.token, (req, res) => {
+  res.header("Content-Type", "application/json");
+
+  console.log(req.body);
+});
+
+// -- END TELEGRAM BOT SETUP --
+
 // start the server
 app.listen(app.get("PORT"), () =>
   console.log(`Katou is listening in PORT: ${app.get("PORT")}`)
