@@ -34,12 +34,11 @@ app.post(`/${botConfig.telegram.token}`, bodyParser.json(), (req, res) => {
   res.status(200).send(
     JSON.stringify({
       method: "sendMessage",
-      chat_id: "@Rehre",
-      text: "hello"
+      chat_id: req.body.message.chat.id,
+      text: req.body.message.text
     })
   );
 
-  console.log(req);
   console.log(req.body);
 });
 
