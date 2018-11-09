@@ -30,7 +30,7 @@ app.post("/webhook_line", (0, _botSdk.middleware)(_botConfig.default.line), func
 app.post("/".concat(_botConfig.default.telegram.token), _bodyParser.default.json(), function (req, res) {
   res.header("Content-Type", "application/json");
 
-  if (req.body.message.chat.text.includes('/say')) {
+  if (req.body.message.text.includes('/say')) {
     res.status(200).send(JSON.stringify({
       method: "sendMessage",
       chat_id: req.body.message.chat.id,

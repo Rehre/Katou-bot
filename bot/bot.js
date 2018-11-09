@@ -32,7 +32,7 @@ app.post("/webhook_line", LineMiddleware(botConfig.line), (req, res) => {
 app.post(`/${botConfig.telegram.token}`, bodyParser.json(), (req, res) => {
   res.header("Content-Type", "application/json");
   
-  if (req.body.message.chat.text.includes('/say')) {
+  if (req.body.message.text.includes('/say')) {
     res.status(200).send(
       JSON.stringify({
         method: "sendMessage",
