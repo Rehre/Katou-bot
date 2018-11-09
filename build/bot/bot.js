@@ -34,7 +34,7 @@ app.post("/".concat(_botConfig.default.telegram.token), _bodyParser.default.json
     res.status(200).send(JSON.stringify({
       method: "sendMessage",
       chat_id: req.body.message.chat.id,
-      text: req.body.message.text.match(/[^\/say@KatouBot|/say]/g)[0]
+      text: req.body.message.text.match(/^(\/say@KatouBot)|(\/say)/g)
     }));
     return;
   }
