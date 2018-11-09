@@ -1,4 +1,5 @@
 import express from "express";
+import bodyParser from "body-parser";
 import {
   Client as LineClient,
   middleware as LineMiddleware
@@ -9,6 +10,8 @@ import LineEventHandler from "./event-handler/line";
 
 // server setup
 const app = express();
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.set("PORT", process.env.PORT || 3000);
 
 // -- START LINE BOT SETUP --
@@ -37,6 +40,7 @@ app.post(`/${botConfig.telegram.token}`, (req, res) => {
   });
 
   console.log(req);
+  console.log(req.body);
 });
 
 // -- END TELEGRAM BOT SETUP --

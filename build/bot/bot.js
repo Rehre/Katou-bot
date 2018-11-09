@@ -4,6 +4,8 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 
 var _express = _interopRequireDefault(require("express"));
 
+var _bodyParser = _interopRequireDefault(require("body-parser"));
+
 var _botSdk = require("@line/bot-sdk");
 
 var _botConfig = _interopRequireDefault(require("./bot-config"));
@@ -12,6 +14,10 @@ var _line = _interopRequireDefault(require("./event-handler/line"));
 
 // server setup
 var app = (0, _express.default)();
+app.use(_bodyParser.default.json());
+app.use(_bodyParser.default.urlencoded({
+  extended: true
+}));
 app.set("PORT", process.env.PORT || 3000); // -- START LINE BOT SETUP --
 // setup the event handler for LINE
 
@@ -33,6 +39,7 @@ app.post("/".concat(_botConfig.default.telegram.token), function (req, res) {
     text: "hello"
   });
   console.log(req);
+  console.log(req.body);
 }); // -- END TELEGRAM BOT SETUP --
 // start the server
 
