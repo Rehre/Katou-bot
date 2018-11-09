@@ -30,8 +30,13 @@ app.post("/webhook_line", LineMiddleware(botConfig.line), (req, res) => {
 
 app.post(`/${botConfig.telegram.token}`, (req, res) => {
   res.header("Content-Type", "application/json");
+  res.status(200).send({
+    method: "sendMessage",
+    chat_id: "@Rehre",
+    text: "hello"
+  });
 
-  console.log(req.body);
+  console.log(req);
 });
 
 // -- END TELEGRAM BOT SETUP --

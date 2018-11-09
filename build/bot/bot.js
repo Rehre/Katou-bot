@@ -27,7 +27,12 @@ app.post("/webhook_line", (0, _botSdk.middleware)(_botConfig.default.line), func
 
 app.post("/".concat(_botConfig.default.telegram.token), function (req, res) {
   res.header("Content-Type", "application/json");
-  console.log(req.body);
+  res.status(200).send({
+    method: "sendMessage",
+    chat_id: "@Rehre",
+    text: "hello"
+  });
+  console.log(req);
 }); // -- END TELEGRAM BOT SETUP --
 // start the server
 
