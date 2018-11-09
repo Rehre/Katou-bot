@@ -25,7 +25,7 @@ app.post("/webhook_line", (0, _botSdk.middleware)(_botConfig.default.line), func
 }); // -- END LINE BOT SETUP --
 // -- START TELEGRAM BOT SETUP --
 
-app.post(_botConfig.default.telegram.token, function (req, res) {
+app.post("/".concat(_botConfig.default.telegram.token), function (req, res) {
   res.header("Content-Type", "application/json");
   console.log(req.body);
 }); // -- END TELEGRAM BOT SETUP --
