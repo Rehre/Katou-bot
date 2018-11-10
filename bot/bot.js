@@ -7,6 +7,7 @@ import {
 
 import botConfig from "./bot-config";
 import LineEventHandler from "./event-handler/line";
+import TelegramEventHandler from "./event-handler/telegram";
 
 // server setup
 const app = express();
@@ -30,29 +31,13 @@ app.post("/webhook_line", LineMiddleware(botConfig.line), (req, res) => {
 // -- START TELEGRAM BOT SETUP --
 
 app.post(`/${botConfig.telegram.token}`, bodyParser.json(), (req, res) => {
-  res.header("Content-Type", "application/json");
-  
-  if (req.body.message.text.includes('/say')) {
-    res.status(200).send(
-      JSON.stringify({
-        method: "sendMessage",
-        chat_id: req.body.message.chat.id,
-        text: req.body.message.text.replace(/(\/say@KatouBot)|(\/say)/g, ''),
-      })
-    );
-    
-    return;
-  }
-
-  res.status(200).send(
-    JSON.stringify({
-      method: "sendMessage",
-      chat_id: req.body.message.chat.id,
-      text: req.body.message.text
-    })
-  );
-
   console.log(req.body);
+  res.header("Content-Type", "application/json");
+
+  const telegramEventHandler =  new TelegramEventHandler(res);
+  telegramEventHandler.handle(req.body);
+
+  return;
 });
 
 // -- END TELEGRAM BOT SETUP --

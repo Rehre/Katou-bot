@@ -12,6 +12,8 @@ var _botConfig = _interopRequireDefault(require("./bot-config"));
 
 var _line = _interopRequireDefault(require("./event-handler/line"));
 
+var _telegram = _interopRequireDefault(require("./event-handler/telegram"));
+
 // server setup
 var app = (0, _express.default)();
 app.set("PORT", process.env.PORT || 3000); // -- START LINE BOT SETUP --
@@ -28,23 +30,11 @@ app.post("/webhook_line", (0, _botSdk.middleware)(_botConfig.default.line), func
 // -- START TELEGRAM BOT SETUP --
 
 app.post("/".concat(_botConfig.default.telegram.token), _bodyParser.default.json(), function (req, res) {
-  res.header("Content-Type", "application/json");
-
-  if (req.body.message.text.includes('/say')) {
-    res.status(200).send(JSON.stringify({
-      method: "sendMessage",
-      chat_id: req.body.message.chat.id,
-      text: req.body.message.text.replace(/(\/say@KatouBot)|(\/say)/g, '')
-    }));
-    return;
-  }
-
-  res.status(200).send(JSON.stringify({
-    method: "sendMessage",
-    chat_id: req.body.message.chat.id,
-    text: req.body.message.text
-  }));
   console.log(req.body);
+  res.header("Content-Type", "application/json");
+  var telegramEventHandler = new _telegram.default(res);
+  telegramEventHandler.handle(req.body);
+  return;
 }); // -- END TELEGRAM BOT SETUP --
 // start the server
 
