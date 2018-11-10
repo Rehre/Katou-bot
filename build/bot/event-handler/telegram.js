@@ -41,7 +41,7 @@ function () {
       var botApi = this.botApi;
 
       if (command.includes("/katou") || command === "katou") {
-        sendBack(_telegram.default.replyTextMessage(receiverChatID, botApi.sendReply(messageObject.chat.first_name)));
+        sendBack(_telegram.default.replyTextMessage(receiverChatID, botApi.sendReply(messageObject.from.first_name)));
       }
 
       if (command.includes("/ramal")) {
@@ -61,14 +61,14 @@ function () {
       }
 
       if (command.includes("/hbd")) {
-        sendBack(_telegram.default.replyTextMessage("Selamat ulang tahun ".concat(this.parseKeyword(messageObject, "hbd"), " :D")));
+        sendBack(_telegram.default.replyTextMessage(receiverChatID, "Selamat ulang tahun ".concat(this.parseKeyword(messageObject, "hbd"), " :D")));
       }
 
       if (command.includes("/weather")) {
         botApi.getWeather(this.parseKeyword(messageObject, "weather")).then(function (result) {
-          sendBack(_telegram.default.replyTextMessage(result));
+          sendBack(_telegram.default.replyTextMessage(receiverChatID, result));
         }).catch(function (err) {
-          sendBack(_telegram.default.replyTextMessage(err));
+          sendBack(_telegram.default.replyTextMessage(receiverChatID, err));
         });
       }
 

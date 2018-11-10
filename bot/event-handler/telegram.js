@@ -25,7 +25,7 @@ export default class TelegramEventHandler {
       sendBack(
         Wrapper.replyTextMessage(
           receiverChatID,
-          botApi.sendReply(messageObject.chat.first_name)
+          botApi.sendReply(messageObject.from.first_name)
         )
       );
     }
@@ -57,6 +57,7 @@ export default class TelegramEventHandler {
     if (command.includes("/hbd")) {
       sendBack(
         Wrapper.replyTextMessage(
+          receiverChatID,
           `Selamat ulang tahun ${this.parseKeyword(messageObject, "hbd")} :D`
         )
       );
@@ -66,10 +67,10 @@ export default class TelegramEventHandler {
       botApi
         .getWeather(this.parseKeyword(messageObject, "weather"))
         .then(result => {
-          sendBack(Wrapper.replyTextMessage(result));
+          sendBack(Wrapper.replyTextMessage(receiverChatID, result));
         })
         .catch(err => {
-          sendBack(Wrapper.replyTextMessage(err));
+          sendBack(Wrapper.replyTextMessage(receiverChatID, err));
         });
     }
 
