@@ -65,7 +65,7 @@ function () {
       }
 
       if (command.includes("/weather")) {
-        botApi.getWeather(this.parseKeyword("weather")).then(function (result) {
+        botApi.getWeather(this.parseKeyword(messageObject, "weather")).then(function (result) {
           sendBack(_telegram.default.replyTextMessage(result));
         }).catch(function (err) {
           sendBack(_telegram.default.replyTextMessage(err));

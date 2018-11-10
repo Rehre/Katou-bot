@@ -64,7 +64,7 @@ export default class TelegramEventHandler {
 
     if (command.includes("/weather")) {
       botApi
-        .getWeather(this.parseKeyword("weather"))
+        .getWeather(this.parseKeyword(messageObject, "weather"))
         .then(result => {
           sendBack(Wrapper.replyTextMessage(result));
         })
