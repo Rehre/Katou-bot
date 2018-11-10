@@ -27,6 +27,15 @@ function () {
         text: text
       };
     }
+  }, {
+    key: "replyPhoto",
+    value: function replyPhoto(chat_id, photo) {
+      return {
+        method: "sendPhoto",
+        chat_id: chat_id,
+        photo: photo
+      };
+    }
   }]);
   return Wrapper;
 }();

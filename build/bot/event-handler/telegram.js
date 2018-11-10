@@ -33,14 +33,14 @@ function () {
   }, {
     key: "handle",
     value: function handle(event) {
-      if (!event.message) return;
+      if (!event.message) sendBack(null);
       var command = event.message.text;
       var messageObject = event.message;
       var receiverChatID = event.message.chat.id;
       var sendBack = this.sendBack;
       var botApi = this.botApi;
 
-      if (command === "katou") {
+      if (command.includes("/katou") || command === "katou") {
         sendBack(_telegram.default.replyTextMessage(receiverChatID, botApi.sendReply(messageObject.chat.first_name)));
       }
 
@@ -48,8 +48,40 @@ function () {
         sendBack(_telegram.default.replyTextMessage(receiverChatID, botApi.getRamal()));
       }
 
+      if (command.includes("/wiki")) {
+        botApi.getWiki(this.parseKeyword("wiki")).then(function (result) {
+          sendBack(_telegram.default.replyTextMessage(receiverChatID, result));
+        }).catch(function (err) {
+          sendBack(_telegram.default.replyTextMessage(receiverChatID, err));
+        });
+      }
+
       if (command.includes("/say")) {
         sendBack(_telegram.default.replyTextMessage(receiverChatID, this.parseKeyword(messageObject, "say")));
+      }
+
+      if (command.includes("/hbd")) {
+        sendBack(_telegram.default.replyTextMessage("Selamat ulang tahun ".concat(this.parseKeyword("hbd"), " :D")));
+      }
+
+      if (command.includes("/weather")) {
+        botApi.getWeather(this.parseKeyword("weather")).then(function (result) {
+          sendBack(_telegram.default.replyTextMessage(result));
+        }).catch(function (err) {
+          sendBack(_telegram.default.replyTextMessage(err));
+        });
+      }
+
+      if (command.includes("/calc")) {
+        sendBack(_telegram.default.replyTextMessage(receiverChatID, eval(this.parseKeyword("calc"))));
+      }
+
+      if (command.includes("/pic")) {
+        botApi.getImageUrl(this.parseKeyword("/pic")).then(function (result) {
+          sendBack(_telegram.default.replyPhoto(receiverChatID, result));
+        }).catch(function (err) {
+          sendBack(_telegram.default.replyTextMessage(receiverChatID, err));
+        });
       }
     }
   }]);
