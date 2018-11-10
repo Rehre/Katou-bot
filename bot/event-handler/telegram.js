@@ -13,7 +13,7 @@ export default class TelegramEventHandler {
   }
 
   handle(event) {
-    if (!event.message) sendBack(null);
+    if (!event.message) this.sendBack(null);
 
     const command = event.message.text;
     const messageObject = event.message;
@@ -34,17 +34,6 @@ export default class TelegramEventHandler {
       sendBack(Wrapper.replyTextMessage(receiverChatID, botApi.getRamal()));
     }
 
-    if (command.includes("/wiki")) {
-      botApi
-        .getWiki(this.parseKeyword("wiki"))
-        .then(result => {
-          sendBack(Wrapper.replyTextMessage(receiverChatID, result));
-        })
-        .catch(err => {
-          sendBack(Wrapper.replyTextMessage(receiverChatID, err));
-        });
-    }
-
     if (command.includes("/say")) {
       sendBack(
         Wrapper.replyTextMessage(
@@ -54,10 +43,21 @@ export default class TelegramEventHandler {
       );
     }
 
+    if (command.includes("/wiki")) {
+      botApi
+        .getWiki(this.parseKeyword(messageObject, "wiki"))
+        .then(result => {
+          sendBack(Wrapper.replyTextMessage(receiverChatID, result));
+        })
+        .catch(err => {
+          sendBack(Wrapper.replyTextMessage(receiverChatID, err));
+        });
+    }
+
     if (command.includes("/hbd")) {
       sendBack(
         Wrapper.replyTextMessage(
-          `Selamat ulang tahun ${this.parseKeyword("hbd")} :D`
+          `Selamat ulang tahun ${this.parseKeyword(messageObject, "hbd")} :D`
         )
       );
     }
@@ -77,14 +77,14 @@ export default class TelegramEventHandler {
       sendBack(
         Wrapper.replyTextMessage(
           receiverChatID,
-          eval(this.parseKeyword("calc"))
+          eval(this.parseKeyword(messageObject, "calc"))
         )
       );
     }
 
     if (command.includes("/pic")) {
       botApi
-        .getImageUrl(this.parseKeyword("/pic"))
+        .getImageUrl(this.parseKeyword(messageObject, "/pic"))
         .then(result => {
           sendBack(Wrapper.replyPhoto(receiverChatID, result));
         })

@@ -33,7 +33,7 @@ function () {
   }, {
     key: "handle",
     value: function handle(event) {
-      if (!event.message) sendBack(null);
+      if (!event.message) this.sendBack(null);
       var command = event.message.text;
       var messageObject = event.message;
       var receiverChatID = event.message.chat.id;
@@ -48,20 +48,20 @@ function () {
         sendBack(_telegram.default.replyTextMessage(receiverChatID, botApi.getRamal()));
       }
 
+      if (command.includes("/say")) {
+        sendBack(_telegram.default.replyTextMessage(receiverChatID, this.parseKeyword(messageObject, "say")));
+      }
+
       if (command.includes("/wiki")) {
-        botApi.getWiki(this.parseKeyword("wiki")).then(function (result) {
+        botApi.getWiki(this.parseKeyword(messageObject, "wiki")).then(function (result) {
           sendBack(_telegram.default.replyTextMessage(receiverChatID, result));
         }).catch(function (err) {
           sendBack(_telegram.default.replyTextMessage(receiverChatID, err));
         });
       }
 
-      if (command.includes("/say")) {
-        sendBack(_telegram.default.replyTextMessage(receiverChatID, this.parseKeyword(messageObject, "say")));
-      }
-
       if (command.includes("/hbd")) {
-        sendBack(_telegram.default.replyTextMessage("Selamat ulang tahun ".concat(this.parseKeyword("hbd"), " :D")));
+        sendBack(_telegram.default.replyTextMessage("Selamat ulang tahun ".concat(this.parseKeyword(messageObject, "hbd"), " :D")));
       }
 
       if (command.includes("/weather")) {
@@ -73,11 +73,11 @@ function () {
       }
 
       if (command.includes("/calc")) {
-        sendBack(_telegram.default.replyTextMessage(receiverChatID, eval(this.parseKeyword("calc"))));
+        sendBack(_telegram.default.replyTextMessage(receiverChatID, eval(this.parseKeyword(messageObject, "calc"))));
       }
 
       if (command.includes("/pic")) {
-        botApi.getImageUrl(this.parseKeyword("/pic")).then(function (result) {
+        botApi.getImageUrl(this.parseKeyword(messageObject, "/pic")).then(function (result) {
           sendBack(_telegram.default.replyPhoto(receiverChatID, result));
         }).catch(function (err) {
           sendBack(_telegram.default.replyTextMessage(receiverChatID, err));
