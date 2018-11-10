@@ -1,8 +1,8 @@
 import Wrapper from "../reply-wrapper/telegram";
 
 export default class TelegramEventHandler {
-  constructor(response) {
-    this.sendBack = response.status(200).send;
+  constructor(sendBackFunc) {
+    this.sendBack = sendBackFunc;
   }
 
   parseKeyword(event, keyword) {

@@ -16,9 +16,9 @@ var _telegram = _interopRequireDefault(require("../reply-wrapper/telegram"));
 var TelegramEventHandler =
 /*#__PURE__*/
 function () {
-  function TelegramEventHandler(response) {
+  function TelegramEventHandler(sendBackFunc) {
     (0, _classCallCheck2.default)(this, TelegramEventHandler);
-    this.sendBack = response.status(200).send;
+    this.sendBack = sendBackFunc;
   }
 
   (0, _createClass2.default)(TelegramEventHandler, [{

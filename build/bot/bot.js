@@ -32,7 +32,7 @@ app.post("/webhook_line", (0, _botSdk.middleware)(_botConfig.default.line), func
 app.post("/".concat(_botConfig.default.telegram.token), _bodyParser.default.json(), function (req, res) {
   console.log(req.body);
   res.header("Content-Type", "application/json");
-  var telegramEventHandler = new _telegram.default(res);
+  var telegramEventHandler = new _telegram.default(res.status(200).send.bind(res));
   telegramEventHandler.handle(req.body);
   return;
 }); // -- END TELEGRAM BOT SETUP --
