@@ -77,7 +77,7 @@ function () {
       }
 
       if (command.includes("/pic")) {
-        botApi.getImageUrl(this.parseKeyword(messageObject, "/pic")).then(function (result) {
+        botApi.getImageUrl(this.parseKeyword(messageObject, "pic")).then(function (result) {
           sendBack(_telegram.default.replyPhoto(receiverChatID, result));
         }).catch(function (err) {
           sendBack(_telegram.default.replyTextMessage(receiverChatID, err));

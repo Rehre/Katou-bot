@@ -84,7 +84,7 @@ export default class TelegramEventHandler {
 
     if (command.includes("/pic")) {
       botApi
-        .getImageUrl(this.parseKeyword(messageObject, "/pic"))
+        .getImageUrl(this.parseKeyword(messageObject, "pic"))
         .then(result => {
           sendBack(Wrapper.replyPhoto(receiverChatID, result));
         })
