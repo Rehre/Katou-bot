@@ -6,4 +6,12 @@ export default class Wrapper {
       text
     };
   }
+
+  static replyPhoto(chat_id, photo) {
+    return {
+      method: "sendPhoto",
+      chat_id,
+      photo
+    };
+  }
 }

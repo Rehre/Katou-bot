@@ -13,7 +13,7 @@ export default class TelegramEventHandler {
   }
 
   handle(event) {
-    if (!event.message) return;
+    if (!event.message) sendBack(null);
 
     const command = event.message.text;
     const messageObject = event.message;
@@ -21,7 +21,7 @@ export default class TelegramEventHandler {
     const sendBack = this.sendBack;
     const botApi = this.botApi;
 
-    if (command.includes('/katou') || command === "katou") {
+    if (command.includes("/katou") || command === "katou") {
       sendBack(
         Wrapper.replyTextMessage(
           receiverChatID,
@@ -31,12 +31,18 @@ export default class TelegramEventHandler {
     }
 
     if (command.includes("/ramal")) {
-      sendBack(
-        Wrapper.replyTextMessage(
-          receiverChatID,
-          botApi.getRamal()
-        )
-      )
+      sendBack(Wrapper.replyTextMessage(receiverChatID, botApi.getRamal()));
+    }
+
+    if (command.includes("/wiki")) {
+      botApi
+        .getWiki(this.parseKeyword("wiki"))
+        .then(result => {
+          sendBack(Wrapper.replyTextMessage(receiverChatID, result));
+        })
+        .catch(err => {
+          sendBack(Wrapper.replyTextMessage(receiverChatID, err));
+        });
     }
 
     if (command.includes("/say")) {
@@ -46,6 +52,45 @@ export default class TelegramEventHandler {
           this.parseKeyword(messageObject, "say")
         )
       );
+    }
+
+    if (command.includes("/hbd")) {
+      sendBack(
+        Wrapper.replyTextMessage(
+          `Selamat ulang tahun ${this.parseKeyword("hbd")} :D`
+        )
+      );
+    }
+
+    if (command.includes("/weather")) {
+      botApi
+        .getWeather(this.parseKeyword("weather"))
+        .then(result => {
+          sendBack(Wrapper.replyTextMessage(result));
+        })
+        .catch(err => {
+          sendBack(Wrapper.replyTextMessage(err));
+        });
+    }
+
+    if (command.includes("/calc")) {
+      sendBack(
+        Wrapper.replyTextMessage(
+          receiverChatID,
+          eval(this.parseKeyword("calc"))
+        )
+      );
+    }
+
+    if (command.includes("/pic")) {
+      botApi
+        .getImageUrl(this.parseKeyword("/pic"))
+        .then(result => {
+          sendBack(Wrapper.replyPhoto(receiverChatID, result));
+        })
+        .catch(err => {
+          sendBack(Wrapper.replyTextMessage(receiverChatID, err));
+        });
     }
   }
 }
