@@ -25,7 +25,7 @@ export default class TelegramEventHandler {
 
     if (command[0] != "/") this.sendBack({});
 
-    if (command.includes("/katou")) {
+    if (command.includes("/katou") || command.includes("/start")) {
       sendBack(
         Wrapper.replyTextMessage(
           receiverChatID,
@@ -82,7 +82,7 @@ export default class TelegramEventHandler {
       sendBack(
         Wrapper.replyTextMessage(
           receiverChatID,
-          eval(this.parseKeyword(messageObject, "calc"))
+          eval(this.parseKeyword(messageObject, "calc")) || "can't calculate"
         )
       );
     }

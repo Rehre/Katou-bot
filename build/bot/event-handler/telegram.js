@@ -43,7 +43,7 @@ function () {
       var botApi = this.botApi;
       if (command[0] != "/") this.sendBack({});
 
-      if (command.includes("/katou")) {
+      if (command.includes("/katou") || command.includes("/start")) {
         sendBack(_telegram.default.replyTextMessage(receiverChatID, botApi.sendReply(messageObject.from.first_name)));
       }
 
@@ -76,7 +76,7 @@ function () {
       }
 
       if (command.includes("/calc")) {
-        sendBack(_telegram.default.replyTextMessage(receiverChatID, eval(this.parseKeyword(messageObject, "calc"))));
+        sendBack(_telegram.default.replyTextMessage(receiverChatID, eval(this.parseKeyword(messageObject, "calc")) || "can't calculate"));
       }
 
       if (command.includes("/pic")) {
