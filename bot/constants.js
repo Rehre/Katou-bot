@@ -41,5 +41,6 @@ export default {
 /music - suruh katou mencari musik
 /animequote - dapatkan quote dari anime
 /lovemeter - dapatkan persentase cinta pasangan
+/translate - katou akan menerjemahkan teks
 `
 };

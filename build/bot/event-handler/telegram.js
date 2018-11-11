@@ -46,8 +46,8 @@ function () {
       var sendBack = this.sendBack;
       var botApi = this.botApi;
       if (!command) this.sendBack({});
-      if (this.commandList.some(function (item) {
-        return item === command;
+      if (!this.commandList.some(function (item) {
+        return command.includes(item);
       })) this.sendBack({});
 
       if (command.includes("/katou") || command.includes("/start")) {
@@ -212,6 +212,25 @@ function () {
 
         botApi.getLoveMeter(_keyword10).then(function (result) {
           sendBack(_telegram.default.replyTextMessage(receiverChatID, "Persentase pasangan ".concat(result.fname, " dan ").concat(result.sname, " :\n\n").concat(result.percentage, "%\n\nSaran: ").concat(result.result)));
+        }).catch(function (err) {
+          sendBack(_telegram.default.replyTextMessage(receiverChatID, err));
+        });
+      }
+
+      if (command.includes("/translate")) {
+        var _keyword11 = this.parseKeyword(messageObject, "translate").trim();
+
+        if (!_keyword11) {
+          sendBack(_telegram.default.replyTextMessage(receiverChatID, "Tolong masukan keyword seperti: /translate {kode bahasa dari}:{kode bahasa ke} {text}"));
+          return;
+        }
+
+        var keywordArray = _keyword11.split(" ");
+
+        var lang = keywordArray[0];
+        var text = keywordArray[1];
+        botApi.translateText(text, lang).then(function (result) {
+          sendBack(_telegram.default.replyTextMessage(receiverChatID, result));
         }).catch(function (err) {
           sendBack(_telegram.default.replyTextMessage(receiverChatID, err));
         });

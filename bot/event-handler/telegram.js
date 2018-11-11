@@ -42,7 +42,8 @@ export default class TelegramEventHandler {
     const botApi = this.botApi;
 
     if (!command) this.sendBack({});
-    if (this.commandList.some(item => item === command)) this.sendBack({});
+    if (!this.commandList.some(item => command.includes(item)))
+      this.sendBack({});
 
     if (command.includes("/katou") || command.includes("/start")) {
       sendBack(
@@ -344,6 +345,43 @@ export default class TelegramEventHandler {
         })
         .catch(err => {
           sendBack(Wrapper.replyTextMessage(receiverChatID, err));
+        });
+    }
+
+    if (command.includes("/translate")) {
+      const keyword = this.parseKeyword(messageObject, "translate").trim();
+
+      if (!keyword) {
+        sendBack(
+          Wrapper.replyTextMessage(
+            receiverChatID,
+            "Tolong masukan keyword seperti: /translate {kode bahasa dari}:{kode bahasa ke} {text}"
+          )
+        );
+
+        return;
+      }
+      const keywordArray = keyword.split(" ");
+      const lang = keywordArray[0];
+      const text = keywordArray[1];
+
+      botApi
+        .translateText(text, lang)
+        .then(result => {
+          sendBack(
+            Wrapper.replyTextMessage(
+              receiverChatID,
+              result
+            )
+          );
+        })
+        .catch(err => {
+          sendBack(
+            Wrapper.replyTextMessage(
+              receiverChatID,
+              err
+            )
+          );
         });
     }
   }
