@@ -260,9 +260,9 @@ export default class BotApi {
 
   async getLoveMeter(keyword) {
     try {
-      const signPosition = keyword.indexOf(":");
-      const person1 = keyword.substr(16, signPosition - 16);
-      const person2 = keyword.substr(signPosition + 1);
+      const couple = keyword.split(":");
+      const person1 = couple[0];
+      const person2 = couple[1];
 
       const response = await rp({
         uri: `${constants.MASHAPE_LOVEMETERURL}${person1}${
