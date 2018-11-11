@@ -36,6 +36,26 @@ function () {
         photo: photo
       };
     }
+  }, {
+    key: "replyVideo",
+    value: function replyVideo(chat_id, caption, video) {
+      return {
+        method: "sendVideo",
+        chat_id: chat_id,
+        video: video,
+        caption: caption
+      };
+    }
+  }, {
+    key: "replyLocation",
+    value: function replyLocation(chat_id, lat, long) {
+      return {
+        method: "sendLocation",
+        chat_id: chat_id,
+        latitude: latitude,
+        longitude: longitude
+      };
+    }
   }]);
   return Wrapper;
 }();

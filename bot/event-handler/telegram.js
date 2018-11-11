@@ -1,5 +1,7 @@
 import Wrapper from "../reply-wrapper/telegram";
 import BotApi from "../bot-api";
+import constants from "../constants";
+
 export default class TelegramEventHandler {
   constructor(sendBackFunc) {
     this.sendBack = sendBackFunc;
@@ -23,7 +25,7 @@ export default class TelegramEventHandler {
 
     if (command[0] != "/") this.sendBack({});
 
-    if (command.includes("/katou") || command === "katou") {
+    if (command.includes("/katou")) {
       sendBack(
         Wrapper.replyTextMessage(
           receiverChatID,
@@ -90,6 +92,100 @@ export default class TelegramEventHandler {
         .getImageUrl(this.parseKeyword(messageObject, "pic"))
         .then(result => {
           sendBack(Wrapper.replyPhoto(receiverChatID, result));
+        })
+        .catch(err => {
+          sendBack(Wrapper.replyTextMessage(receiverChatID, err));
+        });
+    }
+
+    if (command.includes("/video")) {
+      botApi
+        .getYoutubeUrl(this.parseKeyword(messageObject, "video"))
+        .then(result => {
+          sendBack(
+            Wrapper.replyTextMessage(
+              receiverChatID,
+              `${result.title}\n\n${result.link}`
+            )
+          );
+        })
+        .catch(err => {
+          sendBack(Wrapper.replyTextMessage(receiverChatID, err));
+        });
+    }
+
+    if (command.includes("/location")) {
+      botApi
+        .getLocation(this.parseKeyword(message, "location"))
+        .then(result => {
+          sendBack(
+            Wrapper.replyLocation(
+              receiverChatID,
+              result.latitude,
+              result.longitude
+            )
+          );
+        })
+        .catch(err => {
+          sendBack(Wrapper.replyTextMessage(receiverChatID, err));
+        });
+    }
+
+    if (command.includes("/write")) {
+      sendBack(
+        Wrapper.replyPhoto(
+          receiverChatID,
+          `${constants.CHARTAPI_URL}${this.parseKeyword(
+            messageObject,
+            "write"
+          )}${constants.CHARTAPI_QUERY}`
+        )
+      );
+    }
+
+    if (command.includes("/music")) {
+      botApi
+        .getYoutubeUrl(this.parseKeyword(messageObject, "music"))
+        .then(result => {
+          sendBack(
+            Wrapper.replyTextMessage(
+              receiverChatID,
+              `${result.title}\n\n Link download : ${constants.MP3YOUTUBE_URL}${
+                result.link
+              }`
+            )
+          );
+        })
+        .catch(err => {
+          sendBack(Wrapper.replyTextMessage(receiverChatID, err));
+        });
+    }
+
+    if (command.includes("/animequote")) {
+      const quotesItem = botApi.getAnimeQuote();
+
+      sendBack(
+        Wrapper.replyTextMessage(
+          receiverChatID,
+          `\"${quotesItem.quotesentence}\"\nBy : ${
+            quotesItem.quotecharacter
+          }\nFrom :  ${quotesItem.quoteanime}`
+        )
+      );
+    }
+
+    if (command.includes("/lovemeter")) {
+      botApi
+        .getLoveMeter(this.parseKeyword(messageObject, "lovemeter"))
+        .then(result => {
+          sendBack(
+            Wrapper.replyTextMessage(
+              receiverChatID,
+              `Persentase pasangan ${result.fname} dan ${result.sname} :\n\n${
+                result.percentage
+              }%\n\nSaran: ${result.result}`
+            )
+          );
         })
         .catch(err => {
           sendBack(Wrapper.replyTextMessage(receiverChatID, err));

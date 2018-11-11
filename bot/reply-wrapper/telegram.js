@@ -14,4 +14,22 @@ export default class Wrapper {
       photo
     };
   }
+
+  static replyVideo(chat_id, caption, video) {
+    return {
+      method: "sendVideo",
+      chat_id,
+      video,
+      caption
+    }
+  }
+
+  static replyLocation(chat_id, lat, long) {
+    return {
+      method: "sendLocation",
+      chat_id,
+      latitude,
+      longitude
+    }
+  }
 }
