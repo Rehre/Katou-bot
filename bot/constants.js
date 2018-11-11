@@ -25,5 +25,21 @@ export default {
   MASHAPE_APPKEY: process.env.MASHAPE_APPKEY,
   OSUAPI_KEY: process.env.OSUAPI_KEY,
   KATOULEAVEIMG_URL:
-    "https://image.ibb.co/kYhBYa/1d1827a76c94bfacc205047717824948279041b1_hq.jpg"
+    "https://image.ibb.co/kYhBYa/1d1827a76c94bfacc205047717824948279041b1_hq.jpg",
+  TELEGRAM_HELP: `List keywords:
+/katou - panggil katou
+/ramal - ramal dirimu
+/say - buat katou bicara
+/wiki - tanya katou apa saja
+/hbd - ucapkan selamat ulang tahun
+/weather - dapatkan cuaca
+/calc - suruh katou untuk menghitung
+/pic - cari gambar
+/video - cari video
+/location - cari lokasi
+/write - suruh katou menulis
+/music - suruh katou mencari musik
+/animequote - dapatkan quote dari anime
+/lovemeter - dapatkan persentase cinta pasangan
+`
 };

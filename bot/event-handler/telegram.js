@@ -23,6 +23,7 @@ export default class TelegramEventHandler {
     const sendBack = this.sendBack;
     const botApi = this.botApi;
 
+    if (!command) this.sendBack({});
     if (command[0] != "/") this.sendBack({});
 
     if (command.includes("/katou") || command.includes("/start")) {
@@ -31,6 +32,12 @@ export default class TelegramEventHandler {
           receiverChatID,
           botApi.sendReply(messageObject.from.first_name)
         )
+      );
+    }
+
+    if (command.includes("/help")) {
+      sendBack(
+        Wrapper.replyTextMessage(receiverChatID, constants.TELEGRAM_HELP)
       );
     }
 
