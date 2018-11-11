@@ -6,6 +6,21 @@ export default class TelegramEventHandler {
   constructor(sendBackFunc) {
     this.sendBack = sendBackFunc;
     this.botApi = new BotApi();
+    this.commandList = [
+      "/katou",
+      "/ramal",
+      "/say",
+      "/wiki",
+      "/weather",
+      "/calc",
+      "/pic",
+      "/video",
+      "/location",
+      "/write",
+      "/music",
+      "/animequote",
+      "/lovemeter"
+    ];
   }
 
   parseKeyword(messageObject, keyword) {
@@ -16,7 +31,6 @@ export default class TelegramEventHandler {
 
   // TODO
   // adding osu keyword
-  // adding error handling
   // adding translate keyword
   handle(event) {
     if (!event.message) this.sendBack({});
@@ -28,7 +42,7 @@ export default class TelegramEventHandler {
     const botApi = this.botApi;
 
     if (!command) this.sendBack({});
-    if (command[0] != "/") this.sendBack({});
+    if (this.commandList.some(item => item === command)) this.sendBack({});
 
     if (command.includes("/katou") || command.includes("/start")) {
       sendBack(
@@ -50,17 +64,38 @@ export default class TelegramEventHandler {
     }
 
     if (command.includes("/say")) {
-      sendBack(
-        Wrapper.replyTextMessage(
-          receiverChatID,
-          this.parseKeyword(messageObject, "say")
-        )
-      );
+      const keyword = this.parseKeyword(messageObject, "say");
+
+      if (!keyword.trim()) {
+        sendBack(
+          Wrapper.replyTextMessage(
+            receiverChatID,
+            "Tolong masukan keyword seperti: /say {keyword}"
+          )
+        );
+
+        return;
+      }
+
+      sendBack(Wrapper.replyTextMessage(receiverChatID, keyword.trim()));
     }
 
     if (command.includes("/wiki")) {
+      const keyword = this.parseKeyword(messageObject, "wiki");
+
+      if (!keyword.trim()) {
+        sendBack(
+          Wrapper.replyTextMessage(
+            receiverChatID,
+            "Tolong masukan keyword seperti: /wiki {keyword}"
+          )
+        );
+
+        return;
+      }
+
       botApi
-        .getWiki(this.parseKeyword(messageObject, "wiki"))
+        .getWiki(keyword.trim())
         .then(result => {
           sendBack(Wrapper.replyTextMessage(receiverChatID, result));
         })
@@ -70,17 +105,43 @@ export default class TelegramEventHandler {
     }
 
     if (command.includes("/hbd")) {
+      const keyword = this.parseKeyword(messageObject, "hbd");
+
+      if (!keyword.trim()) {
+        sendBack(
+          Wrapper.replyTextMessage(
+            receiverChatID,
+            "Tolong masukan keyword seperti: /hbd {keyword}"
+          )
+        );
+
+        return;
+      }
+
       sendBack(
         Wrapper.replyTextMessage(
           receiverChatID,
-          `Selamat ulang tahun ${this.parseKeyword(messageObject, "hbd")} :D`
+          `Selamat ulang tahun ${keyword.trim()} :D`
         )
       );
     }
 
     if (command.includes("/weather")) {
+      const keyword = this.parseKeyword(messageObject, "weather");
+
+      if (!keyword.trim()) {
+        sendBack(
+          Wrapper.replyTextMessage(
+            receiverChatID,
+            "Tolong masukan keyword seperti: /weather {keyword}"
+          )
+        );
+
+        return;
+      }
+
       botApi
-        .getWeather(this.parseKeyword(messageObject, "weather"))
+        .getWeather(keyword.trim())
         .then(result => {
           sendBack(Wrapper.replyTextMessage(receiverChatID, result));
         })
@@ -90,17 +151,38 @@ export default class TelegramEventHandler {
     }
     // TODO adding funciton for this
     if (command.includes("/calc")) {
-      sendBack(
-        Wrapper.replyTextMessage(
-          receiverChatID,
-          this.parseKeyword(messageObject, "calc")
-        )
-      );
+      const keyword = this.parseKeyword(messageObject, "calc");
+
+      if (!keyword.trim()) {
+        sendBack(
+          Wrapper.replyTextMessage(
+            receiverChatID,
+            "Tolong masukan keyword seperti: /calc {keyword}{operator}{keyword}"
+          )
+        );
+
+        return;
+      }
+
+      sendBack(Wrapper.replyTextMessage(receiverChatID, keyword.trim()));
     }
 
     if (command.includes("/pic")) {
+      const keyword = this.parseKeyword(messageObject, "pic").trim();
+
+      if (!keyword) {
+        sendBack(
+          Wrapper.replyTextMessage(
+            receiverChatID,
+            "Tolong masukan keyword seperti: /pic {keyword}"
+          )
+        );
+
+        return;
+      }
+
       botApi
-        .getImageUrl(this.parseKeyword(messageObject, "pic"))
+        .getImageUrl(keyword)
         .then(result => {
           sendBack(Wrapper.replyPhoto(receiverChatID, result));
         })
@@ -110,8 +192,21 @@ export default class TelegramEventHandler {
     }
 
     if (command.includes("/video")) {
+      const keyword = this.parseKeyword(messageObject, "video").trim();
+
+      if (!keyword) {
+        sendBack(
+          Wrapper.replyTextMessage(
+            receiverChatID,
+            "Tolong masukan keyword seperti: /video {keyword}"
+          )
+        );
+
+        return;
+      }
+
       botApi
-        .getYoutubeUrl(this.parseKeyword(messageObject, "video"))
+        .getYoutubeUrl(keyword)
         .then(result => {
           sendBack(
             Wrapper.replyTextMessage(
@@ -126,8 +221,21 @@ export default class TelegramEventHandler {
     }
 
     if (command.includes("/location")) {
+      const keyword = this.parseKeyword(messageObject, "location").trim();
+
+      if (!keyword) {
+        sendBack(
+          Wrapper.replyTextMessage(
+            receiverChatID,
+            "Tolong masukan keyword seperti: /location {keyword}"
+          )
+        );
+
+        return;
+      }
+
       botApi
-        .getLocation(this.parseKeyword(messageObject, "location"))
+        .getLocation(keyword)
         .then(result => {
           sendBack(
             Wrapper.replyLocation(
@@ -143,20 +251,43 @@ export default class TelegramEventHandler {
     }
 
     if (command.includes("/write")) {
+      const keyword = this.parseKeyword(messageObject, "write").trim();
+
+      if (!keyword) {
+        sendBack(
+          Wrapper.replyTextMessage(
+            receiverChatID,
+            "Tolong masukan keyword seperti: /write {keyword}"
+          )
+        );
+
+        return;
+      }
+
       sendBack(
         Wrapper.replyPhoto(
           receiverChatID,
-          `${constants.CHARTAPI_URL}${this.parseKeyword(
-            messageObject,
-            "write"
-          )}${constants.CHARTAPI_QUERY}`
+          `${constants.CHARTAPI_URL}${keyword}${constants.CHARTAPI_QUERY}`
         )
       );
     }
 
     if (command.includes("/music")) {
+      const keyword = this.parseKeyword(messageObject, "music").trim();
+
+      if (!keyword) {
+        sendBack(
+          Wrapper.replyTextMessage(
+            receiverChatID,
+            "Tolong masukan keyword seperti: /music {keyword}"
+          )
+        );
+
+        return;
+      }
+
       botApi
-        .getYoutubeUrl(this.parseKeyword(messageObject, "music"))
+        .getYoutubeUrl(keyword)
         .then(result => {
           sendBack(
             Wrapper.replyTextMessage(
@@ -186,8 +317,21 @@ export default class TelegramEventHandler {
     }
 
     if (command.includes("/lovemeter")) {
+      const keyword = this.parseKeyword(messageObject, "lovemeter").trim();
+
+      if (!keyword) {
+        sendBack(
+          Wrapper.replyTextMessage(
+            receiverChatID,
+            "Tolong masukan keyword seperti: /lovemeter {name}:{name}"
+          )
+        );
+
+        return;
+      }
+
       botApi
-        .getLoveMeter(this.parseKeyword(messageObject, "lovemeter"))
+        .getLoveMeter(keyword)
         .then(result => {
           sendBack(
             Wrapper.replyTextMessage(
