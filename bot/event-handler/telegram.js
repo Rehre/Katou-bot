@@ -14,6 +14,10 @@ export default class TelegramEventHandler {
     return messageObject.text.replace(new RegExp(regex, "g"), "");
   }
 
+  // TODO
+  // adding osu keyword
+  // adding error handling
+  // adding translate keyword
   handle(event) {
     if (!event.message) this.sendBack({});
 
@@ -84,12 +88,12 @@ export default class TelegramEventHandler {
           sendBack(Wrapper.replyTextMessage(receiverChatID, err));
         });
     }
-
+    // TODO adding funciton for this
     if (command.includes("/calc")) {
       sendBack(
         Wrapper.replyTextMessage(
           receiverChatID,
-          eval(this.parseKeyword(messageObject, "calc")) || "can't calculate"
+          this.parseKeyword(messageObject, "calc")
         )
       );
     }

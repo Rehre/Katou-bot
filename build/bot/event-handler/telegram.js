@@ -31,7 +31,11 @@ function () {
     value: function parseKeyword(messageObject, keyword) {
       var regex = "(/".concat(keyword, "@KatouBot)|(/").concat(keyword, ")");
       return messageObject.text.replace(new RegExp(regex, "g"), "");
-    }
+    } // TODO
+    // adding osu keyword
+    // adding error handling
+    // adding translate keyword
+
   }, {
     key: "handle",
     value: function handle(event) {
@@ -78,10 +82,11 @@ function () {
         }).catch(function (err) {
           sendBack(_telegram.default.replyTextMessage(receiverChatID, err));
         });
-      }
+      } // TODO adding funciton for this
+
 
       if (command.includes("/calc")) {
-        sendBack(_telegram.default.replyTextMessage(receiverChatID, eval(this.parseKeyword(messageObject, "calc")) || "can't calculate"));
+        sendBack(_telegram.default.replyTextMessage(receiverChatID, this.parseKeyword(messageObject, "calc")));
       }
 
       if (command.includes("/pic")) {
