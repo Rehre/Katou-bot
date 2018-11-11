@@ -14,7 +14,6 @@ export default class TelegramEventHandler {
 
   handle(event) {
     if (!event.message) this.sendBack({});
-    if (!event.message.text) this.sendBack({});
 
     const command = event.message.text;
     const messageObject = event.message;

@@ -39,7 +39,7 @@ app.post(`/${botConfig.telegram.token}`, bodyParser.json(), (req, res) => {
   );
   telegramEventHandler.handle(req.body);
 
-  res.status(200).send({});
+  res.send({});
 
   return;
 });
