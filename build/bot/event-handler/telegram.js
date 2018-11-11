@@ -96,7 +96,7 @@ function () {
       }
 
       if (command.includes("/location")) {
-        botApi.getLocation(this.parseKeyword(message, "location")).then(function (result) {
+        botApi.getLocation(this.parseKeyword(messageObject, "location")).then(function (result) {
           sendBack(_telegram.default.replyLocation(receiverChatID, result.latitude, result.longitude));
         }).catch(function (err) {
           sendBack(_telegram.default.replyTextMessage(receiverChatID, err));

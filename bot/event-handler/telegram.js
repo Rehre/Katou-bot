@@ -116,7 +116,7 @@ export default class TelegramEventHandler {
 
     if (command.includes("/location")) {
       botApi
-        .getLocation(this.parseKeyword(message, "location"))
+        .getLocation(this.parseKeyword(messageObject, "location"))
         .then(result => {
           sendBack(
             Wrapper.replyLocation(
