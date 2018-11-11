@@ -24,7 +24,7 @@ function () {
     (0, _classCallCheck2.default)(this, TelegramEventHandler);
     this.sendBack = sendBackFunc;
     this.botApi = new _botApi.default();
-    this.commandList = ["/katou", "/ramal", "/say", "/wiki", "/weather", "/calc", "/pic", "/video", "/location", "/write", "/music", "/animequote", "/lovemeter"];
+    this.commandList = ["/katou", "/ramal", "/say", "/wiki", "/weather", "/calc", "/pic", "/video", "/location", "/write", "/music", "/animequote", "/lovemeter", "translate"];
   }
 
   (0, _createClass2.default)(TelegramEventHandler, [{
@@ -39,16 +39,28 @@ function () {
   }, {
     key: "handle",
     value: function handle(event) {
-      if (!event.message) this.sendBack({});
+      if (!event.message) {
+        this.sendBack({});
+        return;
+      }
+
       var command = event.message.text;
       var messageObject = event.message;
       var receiverChatID = event.message.chat.id;
       var sendBack = this.sendBack;
       var botApi = this.botApi;
-      if (!command) this.sendBack({});
+
+      if (!command) {
+        this.sendBack({});
+        return;
+      }
+
       if (!this.commandList.some(function (item) {
         return command.includes(item);
-      })) this.sendBack({});
+      })) {
+        this.sendBack({});
+        return;
+      }
 
       if (command.includes("/katou") || command.includes("/start")) {
         sendBack(_telegram.default.replyTextMessage(receiverChatID, botApi.sendReply(messageObject.from.first_name)));

@@ -19,7 +19,8 @@ export default class TelegramEventHandler {
       "/write",
       "/music",
       "/animequote",
-      "/lovemeter"
+      "/lovemeter",
+      "translate"
     ];
   }
 
@@ -33,7 +34,10 @@ export default class TelegramEventHandler {
   // adding osu keyword
   // adding translate keyword
   handle(event) {
-    if (!event.message) this.sendBack({});
+    if (!event.message) {
+      this.sendBack({});
+      return;
+    }
 
     const command = event.message.text;
     const messageObject = event.message;
@@ -41,9 +45,14 @@ export default class TelegramEventHandler {
     const sendBack = this.sendBack;
     const botApi = this.botApi;
 
-    if (!command) this.sendBack({});
-    if (!this.commandList.some(item => command.includes(item)))
+    if (!command) {
       this.sendBack({});
+      return;
+    }
+    if (!this.commandList.some(item => command.includes(item))) {
+      this.sendBack({});
+      return;
+    }
 
     if (command.includes("/katou") || command.includes("/start")) {
       sendBack(
@@ -368,20 +377,10 @@ export default class TelegramEventHandler {
       botApi
         .translateText(text, lang)
         .then(result => {
-          sendBack(
-            Wrapper.replyTextMessage(
-              receiverChatID,
-              result
-            )
-          );
+          sendBack(Wrapper.replyTextMessage(receiverChatID, result));
         })
         .catch(err => {
-          sendBack(
-            Wrapper.replyTextMessage(
-              receiverChatID,
-              err
-            )
-          );
+          sendBack(Wrapper.replyTextMessage(receiverChatID, err));
         });
     }
   }
