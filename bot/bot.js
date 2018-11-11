@@ -39,8 +39,6 @@ app.post(`/${botConfig.telegram.token}`, bodyParser.json(), (req, res) => {
   );
   telegramEventHandler.handle(req.body);
 
-  res.send({});
-
   return;
 });
 

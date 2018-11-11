@@ -21,6 +21,8 @@ export default class TelegramEventHandler {
     const sendBack = this.sendBack;
     const botApi = this.botApi;
 
+    if (command[0] != "/") this.sendBack({});
+
     if (command.includes("/katou") || command === "katou") {
       sendBack(
         Wrapper.replyTextMessage(

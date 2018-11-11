@@ -34,7 +34,6 @@ app.post("/".concat(_botConfig.default.telegram.token), _bodyParser.default.json
   res.header("Content-Type", "application/json");
   var telegramEventHandler = new _telegram.default(res.status(200).send.bind(res));
   telegramEventHandler.handle(req.body);
-  res.send({});
   return;
 }); // -- END TELEGRAM BOT SETUP --
 // start the server

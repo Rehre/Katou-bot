@@ -39,6 +39,7 @@ function () {
       var receiverChatID = event.message.chat.id;
       var sendBack = this.sendBack;
       var botApi = this.botApi;
+      if (command[0] != "/") this.sendBack({});
 
       if (command.includes("/katou") || command === "katou") {
         sendBack(_telegram.default.replyTextMessage(receiverChatID, botApi.sendReply(messageObject.from.first_name)));
