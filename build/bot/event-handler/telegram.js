@@ -33,7 +33,8 @@ function () {
   }, {
     key: "handle",
     value: function handle(event) {
-      if (!event.message) this.sendBack(null);
+      if (!event.message) this.sendBack({});
+      if (!event.message.text) this.sendBack({});
       var command = event.message.text;
       var messageObject = event.message;
       var receiverChatID = event.message.chat.id;

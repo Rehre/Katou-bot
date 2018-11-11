@@ -34,8 +34,12 @@ app.post(`/${botConfig.telegram.token}`, bodyParser.json(), (req, res) => {
   console.log(req.body);
   res.header("Content-Type", "application/json");
 
-  const telegramEventHandler =  new TelegramEventHandler(res.status(200).send.bind(res));
+  const telegramEventHandler = new TelegramEventHandler(
+    res.status(200).send.bind(res)
+  );
   telegramEventHandler.handle(req.body);
+
+  res.status(200).send({});
 
   return;
 });
