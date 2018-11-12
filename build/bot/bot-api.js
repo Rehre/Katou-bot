@@ -409,15 +409,15 @@ function () {
       var _getLoveMeter = (0, _asyncToGenerator2.default)(
       /*#__PURE__*/
       _regenerator.default.mark(function _callee5(keyword) {
-        var signPosition, person1, person2, response;
+        var couple, person1, person2, response;
         return _regenerator.default.wrap(function _callee5$(_context5) {
           while (1) {
             switch (_context5.prev = _context5.next) {
               case 0:
                 _context5.prev = 0;
-                signPosition = keyword.indexOf(":");
-                person1 = keyword.substr(16, signPosition - 16);
-                person2 = keyword.substr(signPosition + 1);
+                couple = keyword.split(":");
+                person1 = couple[0];
+                person2 = couple[1];
                 _context5.next = 6;
                 return (0, _requestPromise.default)({
                   uri: "".concat(_constants.default.MASHAPE_LOVEMETERURL).concat(person1).concat(_constants.default.MASHAPE_LOVEMETERQUERY).concat(person2),

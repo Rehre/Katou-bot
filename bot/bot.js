@@ -1,4 +1,5 @@
 import express from "express";
+import bodyParser from "body-parser";
 import {
   Client as LineClient,
   middleware as LineMiddleware
@@ -6,6 +7,7 @@ import {
 
 import botConfig from "./bot-config";
 import LineEventHandler from "./event-handler/line";
+import TelegramEventHandler from "./event-handler/telegram";
 
 // server setup
 const app = express();
@@ -25,6 +27,22 @@ app.post("/webhook_line", LineMiddleware(botConfig.line), (req, res) => {
 });
 
 // -- END LINE BOT SETUP --
+
+// -- START TELEGRAM BOT SETUP --
+
+app.post(`/${botConfig.telegram.token}`, bodyParser.json(), (req, res) => {
+  console.log(req.body);
+  res.header("Content-Type", "application/json");
+
+  const telegramEventHandler = new TelegramEventHandler(
+    res.status(200).send.bind(res)
+  );
+  telegramEventHandler.handle(req.body);
+
+  return;
+});
+
+// -- END TELEGRAM BOT SETUP --
 
 // start the server
 app.listen(app.get("PORT"), () =>
