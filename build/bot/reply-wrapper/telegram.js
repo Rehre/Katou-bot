@@ -56,6 +56,15 @@ function () {
         longitude: longitude
       };
     }
+  }, {
+    key: "replyOsuProfile",
+    value: function replyOsuProfile(chat_id, objUser) {
+      return {
+        method: "sendMessage",
+        chat_id: chat_id,
+        text: "OSU PROFIL\nusername: ".concat(objUser.username, "\nprofil_description: ").concat(objUser.deskripsi_profil, "\nurl_profil: \"https://osu.ppy.sh/u/").concat(objUser.user_id, "\"\n\nBEST SCORE\nbeatmap: ").concat(objUser.deskripsi_best || "none", "\nurl_beatmap: \"https://osu.ppy.sh/s/").concat(objUser.beatmapset_id || "none", "\"\n")
+      };
+    }
   }]);
   return Wrapper;
 }();

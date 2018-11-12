@@ -370,6 +370,7 @@ export default class TelegramEventHandler {
 
         return;
       }
+
       const keywordArray = keyword.split(" ");
       const lang = keywordArray[0];
       const text = keywordArray[1];
@@ -378,6 +379,60 @@ export default class TelegramEventHandler {
         .translateText(text, lang)
         .then(result => {
           sendBack(Wrapper.replyTextMessage(receiverChatID, result));
+        })
+        .catch(err => {
+          sendBack(Wrapper.replyTextMessage(receiverChatID, err));
+        });
+    }
+
+    if (command.includes("/osu")) {
+      const keyword = this.parseKeyword(messageObject, "osu").trim();
+
+      if (!keyword) {
+        sendBack(
+          Wrapper.replyTextMessage(
+            receiverChatID,
+            "Tolong masukan keyword seperti: /osu {osustd|osumania|osutaiko|osuctb} {user}"
+          )
+        );
+
+        return;
+      }
+
+      let mode = 0;
+      const user = keyword.split(" ")[1];
+
+      if (!user) {
+        sendBack(
+          Wrapper.replyTextMessage(
+            receiverChatID,
+            "Tolong masukan nickname usernya"
+          )
+        );
+
+        return;
+      }
+
+      if (msgText.includes("osustd")) {
+        mode = 0;
+      }
+
+      if (msgText.includes("osumania")) {
+        mode = 3;
+      }
+
+      if (msgText.includes("osutaiko")) {
+        mode = 1;
+      }
+
+      if (msgText.includes("osuctb")) {
+        mode = 2;
+      }
+
+      botApi
+        .getOsuProfile(user, mode)
+        .then(result => {
+          sendBack(Wrapper.replyOsuProfile(receiverChatID, result));
         })
         .catch(err => {
           sendBack(Wrapper.replyTextMessage(receiverChatID, err));

@@ -247,6 +247,46 @@ function () {
           sendBack(_telegram.default.replyTextMessage(receiverChatID, err));
         });
       }
+
+      if (command.includes("/osu")) {
+        var _keyword12 = this.parseKeyword(messageObject, "osu").trim();
+
+        if (!_keyword12) {
+          sendBack(_telegram.default.replyTextMessage(receiverChatID, "Tolong masukan keyword seperti: /osu {osustd|osumania|osutaiko|osuctb} {user}"));
+          return;
+        }
+
+        var mode = 0;
+
+        var user = _keyword12.split(" ")[1];
+
+        if (!user) {
+          sendBack(_telegram.default.replyTextMessage(receiverChatID, "Tolong masukan nickname usernya"));
+          return;
+        }
+
+        if (msgText.includes("osustd")) {
+          mode = 0;
+        }
+
+        if (msgText.includes("osumania")) {
+          mode = 3;
+        }
+
+        if (msgText.includes("osutaiko")) {
+          mode = 1;
+        }
+
+        if (msgText.includes("osuctb")) {
+          mode = 2;
+        }
+
+        botApi.getOsuProfile(user, mode).then(function (result) {
+          sendBack(_telegram.default.replyOsuProfile(receiverChatID, result));
+        }).catch(function (err) {
+          sendBack(_telegram.default.replyTextMessage(receiverChatID, err));
+        });
+      }
     }
   }]);
   return TelegramEventHandler;
