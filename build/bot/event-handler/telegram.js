@@ -24,7 +24,7 @@ function () {
     (0, _classCallCheck2.default)(this, TelegramEventHandler);
     this.sendBack = sendBackFunc;
     this.botApi = new _botApi.default();
-    this.commandList = ["/katou", "/ramal", "/say", "/wiki", "/weather", "/calc", "/pic", "/video", "/location", "/write", "/music", "/animequote", "/lovemeter", "/translate", "/osu"];
+    this.commandList = ["/katou", "/ramal", "/say", "/wiki", "/weather", "/calc", "/pic", "/video", "/location", "/write", "/music", "/animequote", "/lovemeter", "/translate", "/osu", "/help"];
   }
 
   (0, _createClass2.default)(TelegramEventHandler, [{

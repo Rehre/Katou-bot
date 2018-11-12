@@ -21,7 +21,8 @@ export default class TelegramEventHandler {
       "/animequote",
       "/lovemeter",
       "/translate",
-      "/osu"
+      "/osu",
+      "/help"
     ];
   }
 
