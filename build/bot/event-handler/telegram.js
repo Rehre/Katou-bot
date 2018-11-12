@@ -32,10 +32,7 @@ function () {
     value: function parseKeyword(messageObject, keyword) {
       var regex = "(/".concat(keyword, "@KatouBot)|(/").concat(keyword, ")");
       return messageObject.text.replace(new RegExp(regex, "g"), "");
-    } // TODO
-    // adding osu keyword
-    // adding translate keyword
-
+    }
   }, {
     key: "handle",
     value: function handle(event) {

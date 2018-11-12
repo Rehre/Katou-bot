@@ -32,9 +32,6 @@ export default class TelegramEventHandler {
     return messageObject.text.replace(new RegExp(regex, "g"), "");
   }
 
-  // TODO
-  // adding osu keyword
-  // adding translate keyword
   handle(event) {
     if (!event.message) {
       this.sendBack({});
