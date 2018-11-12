@@ -414,19 +414,19 @@ export default class TelegramEventHandler {
         return;
       }
 
-      if (msgText.includes("osustd")) {
+      if (keyword.split(" ")[0] === "osustd") {
         mode = 0;
       }
 
-      if (msgText.includes("osumania")) {
+      if (keyword.split(" ")[0] === "osumania") {
         mode = 3;
       }
 
-      if (msgText.includes("osutaiko")) {
+      if (keyword.split(" ")[0] === "osutaiko") {
         mode = 1;
       }
 
-      if (msgText.includes("osuctb")) {
+      if (keyword.split(" ")[0] === "osuctb") {
         mode = 2;
       }
 
