@@ -42,5 +42,6 @@ export default {
 /animequote - dapatkan quote dari anime
 /lovemeter - dapatkan persentase cinta pasangan
 /translate - katou akan menerjemahkan teks
+/osu - dapatkan profile osu kamu
 `
 };

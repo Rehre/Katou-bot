@@ -28,6 +28,6 @@ var _default = {
   MASHAPE_APPKEY: process.env.MASHAPE_APPKEY,
   OSUAPI_KEY: process.env.OSUAPI_KEY,
   KATOULEAVEIMG_URL: "https://image.ibb.co/kYhBYa/1d1827a76c94bfacc205047717824948279041b1_hq.jpg",
-  TELEGRAM_HELP: "List keywords:\n/katou - panggil katou\n/ramal - ramal dirimu\n/say - buat katou bicara\n/wiki - tanya katou apa saja\n/hbd - ucapkan selamat ulang tahun\n/weather - dapatkan cuaca\n/calc - suruh katou untuk menghitung\n/pic - cari gambar\n/video - cari video\n/location - cari lokasi\n/write - suruh katou menulis\n/music - suruh katou mencari musik\n/animequote - dapatkan quote dari anime\n/lovemeter - dapatkan persentase cinta pasangan\n/translate - katou akan menerjemahkan teks\n"
+  TELEGRAM_HELP: "List keywords:\n/katou - panggil katou\n/ramal - ramal dirimu\n/say - buat katou bicara\n/wiki - tanya katou apa saja\n/hbd - ucapkan selamat ulang tahun\n/weather - dapatkan cuaca\n/calc - suruh katou untuk menghitung\n/pic - cari gambar\n/video - cari video\n/location - cari lokasi\n/write - suruh katou menulis\n/music - suruh katou mencari musik\n/animequote - dapatkan quote dari anime\n/lovemeter - dapatkan persentase cinta pasangan\n/translate - katou akan menerjemahkan teks\n/osu - dapatkan profile osu kamu\n"
 };
 exports.default = _default;
