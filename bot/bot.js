@@ -31,7 +31,6 @@ app.post("/webhook_line", LineMiddleware(botConfig.line), (req, res) => {
 // -- START TELEGRAM BOT SETUP --
 
 app.post(`/${botConfig.telegram.token}`, bodyParser.json(), (req, res) => {
-  console.log(req.body);
   res.header("Content-Type", "application/json");
 
   const telegramEventHandler = new TelegramEventHandler(

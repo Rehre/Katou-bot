@@ -147,9 +147,11 @@ function () {
         }, _callee, this, [[0, 24]]);
       }));
 
-      return function getWiki(_x) {
+      function getWiki(_x) {
         return _getWiki.apply(this, arguments);
-      };
+      }
+
+      return getWiki;
     }()
   }, {
     key: "getImageUrl",
@@ -218,9 +220,11 @@ function () {
         }, _callee2, this, [[0, 10]]);
       }));
 
-      return function getWeather(_x2) {
+      function getWeather(_x2) {
         return _getWeather.apply(this, arguments);
-      };
+      }
+
+      return getWeather;
     }()
   }, {
     key: "getVideo",
@@ -307,9 +311,11 @@ function () {
         }, _callee3, this, [[0, 9]]);
       }));
 
-      return function translateText(_x3, _x4) {
+      function translateText(_x3, _x4) {
         return _translateText.apply(this, arguments);
-      };
+      }
+
+      return translateText;
     }()
   }, {
     key: "getLocation",
@@ -376,9 +382,11 @@ function () {
         }, _callee4, this, [[0, 16]]);
       }));
 
-      return function getLocation(_x5) {
+      function getLocation(_x5) {
         return _getLocation.apply(this, arguments);
-      };
+      }
+
+      return getLocation;
     }()
   }, {
     key: "getYoutubeUrl",
@@ -454,9 +462,11 @@ function () {
         }, _callee5, this, [[0, 12]]);
       }));
 
-      return function getLoveMeter(_x6) {
+      function getLoveMeter(_x6) {
         return _getLoveMeter.apply(this, arguments);
-      };
+      }
+
+      return getLoveMeter;
     }()
   }, {
     key: "getAnimeQuote",
