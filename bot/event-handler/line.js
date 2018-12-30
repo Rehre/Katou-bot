@@ -255,7 +255,7 @@ export default class LineEventHandler {
           );
 
         botApi
-          .getUrlYoutube(keyword)
+          .getYoutubeUrl(keyword)
           .then(result => {
             return client.replyMessage(
               replyToken,

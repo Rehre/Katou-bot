@@ -162,7 +162,7 @@ function () {
           var _keyword7 = msgText.substr(21).trim();
 
           if (_keyword7.length <= 0) return client.replyMessage(replyToken, _line.default.replyText("Silahkan masukan nama musiknya"));
-          botApi.getUrlYoutube(_keyword7).then(function (result) {
+          botApi.getYoutubeUrl(_keyword7).then(function (result) {
             return client.replyMessage(replyToken, _line.default.replyText("".concat(result.title, "\n\n Link download : ").concat(_constants.default.MP3YOUTUBE_URL).concat(result.link)));
           }).catch(function (err) {
             return client.replyMessage(replyToken, _line.default.replyText(err));
