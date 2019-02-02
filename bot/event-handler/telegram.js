@@ -155,7 +155,7 @@ export default class TelegramEventHandler {
           sendBack(Wrapper.replyTextMessage(receiverChatID, result));
         })
         .catch(err => {
-          sendBack(Wrapper.replyTextMessage(receiverChatID, err));
+          sendBack(Wrapper.replyTextMessage(receiverChatID, `Tidak dapat menemukan ${keyword}`));
         });
     }
     // TODO adding funciton for this
