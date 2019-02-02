@@ -117,8 +117,10 @@ function () {
         }
 
         botApi.getWeather(_keyword3.trim()).then(function (result) {
+          console.log(result);
           sendBack(_telegram.default.replyTextMessage(receiverChatID, result));
         }).catch(function (err) {
+          console.log(err);
           sendBack(_telegram.default.replyTextMessage(receiverChatID, "Tidak dapat menemukan ".concat(_keyword3)));
         });
       } // TODO adding funciton for this
