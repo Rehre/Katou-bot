@@ -152,12 +152,10 @@ export default class TelegramEventHandler {
       botApi
         .getWeather(keyword.trim())
         .then(result => {
-          console.log(result);
           sendBack(Wrapper.replyTextMessage(receiverChatID, result));
         })
         .catch(err => {
-          console.log(err);
-          sendBack(Wrapper.replyTextMessage(receiverChatID, `Tidak dapat menemukan ${keyword}`));
+          sendBack(Wrapper.replyTextMessage(receiverChatID, err.message));
         });
     }
     // TODO adding funciton for this
