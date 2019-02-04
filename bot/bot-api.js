@@ -12,6 +12,19 @@ export default class BotApi {
     this.getRandomIndex = length => Math.floor(Math.random() * length);
   }
 
+  async getNLP(keyword) {
+    const response = await rp({
+      uri: "https://katou-nlp-service.herokuapp.com",
+      json: true,
+      body: {
+        keyword
+      }
+    });
+
+    if (!response) throw new Error("Error fetching: response");
+    return response;
+  }
+
   sendReply(username) {
     const replyString = [
       "Iya, " + username + " ?",

@@ -22,7 +22,8 @@ export default class TelegramEventHandler {
       "/lovemeter",
       "/translate",
       "/osu",
-      "/help"
+      "/help",
+      "/ai"
     ];
   }
 
@@ -45,12 +46,25 @@ export default class TelegramEventHandler {
     const botApi = this.botApi;
 
     if (!command) {
-      this.sendBack({});
+      sendBack({});
       return;
     }
     if (!this.commandList.some(item => command.includes(item))) {
-      this.sendBack({});
+      sendBack({});
       return;
+    }
+
+    if (command.includes("/ai")) {
+      const keyword = this.parseKeyword(messageObject, "ai");
+
+      botApi
+        .getNLP(keyword)
+        .then(result => {
+          sendBack(
+            Wrapper.replyTextMessage(receiverChatID, botApi.sendReply(result))
+          );
+        })
+        .catch(err => console.log(err));
     }
 
     if (command.includes("/katou") || command.includes("/start")) {
