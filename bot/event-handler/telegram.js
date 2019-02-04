@@ -69,10 +69,7 @@ export default class TelegramEventHandler {
       botApi
         .getNLP(keyword)
         .then(result => {
-          console.log(result);
-          sendBack(
-            Wrapper.replyTextMessage(receiverChatID, botApi.sendReply(result))
-          );
+          sendBack(Wrapper.replyTextMessage(receiverChatID, result));
         })
         .catch(err => console.log(err));
     }

@@ -57,7 +57,8 @@ function () {
               case 0:
                 _context.next = 2;
                 return (0, _requestPromise.default)({
-                  uri: "https://katou-nlp-service.herokuapp.com",
+                  uri: "https://katou-nlp-service.herokuapp.com/classify",
+                  method: "POST",
                   json: true,
                   body: {
                     keyword: keyword

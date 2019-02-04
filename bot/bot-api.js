@@ -14,7 +14,8 @@ export default class BotApi {
 
   async getNLP(keyword) {
     const response = await rp({
-      uri: "https://katou-nlp-service.herokuapp.com",
+      uri: "https://katou-nlp-service.herokuapp.com/classify",
+      method: "POST",
       json: true,
       body: {
         keyword

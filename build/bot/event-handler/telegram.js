@@ -66,8 +66,7 @@ function () {
       if (command.includes("/ai")) {
         var keyword = this.parseKeyword(messageObject, "ai");
         botApi.getNLP(keyword).then(function (result) {
-          console.log(result);
-          sendBack(_telegram.default.replyTextMessage(receiverChatID, botApi.sendReply(result)));
+          sendBack(_telegram.default.replyTextMessage(receiverChatID, result));
         }).catch(function (err) {
           return console.log(err);
         });
