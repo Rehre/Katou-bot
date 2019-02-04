@@ -54,19 +54,6 @@ export default class TelegramEventHandler {
       return;
     }
 
-    if (command.includes("/ai")) {
-      const keyword = this.parseKeyword(messageObject, "ai");
-
-      botApi
-        .getNLP(keyword)
-        .then(result => {
-          sendBack(
-            Wrapper.replyTextMessage(receiverChatID, botApi.sendReply(result))
-          );
-        })
-        .catch(err => console.log(err));
-    }
-
     if (command.includes("/katou") || command.includes("/start")) {
       sendBack(
         Wrapper.replyTextMessage(
@@ -74,6 +61,20 @@ export default class TelegramEventHandler {
           botApi.sendReply(messageObject.from.first_name)
         )
       );
+    }
+
+    if (command.includes("/ai")) {
+      const keyword = this.parseKeyword(messageObject, "ai");
+
+      botApi
+        .getNLP(keyword)
+        .then(result => {
+          console.log(result);
+          sendBack(
+            Wrapper.replyTextMessage(receiverChatID, botApi.sendReply(result))
+          );
+        })
+        .catch(err => console.log(err));
     }
 
     if (command.includes("/help")) {
