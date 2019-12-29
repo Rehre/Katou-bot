@@ -19,7 +19,7 @@
   "license": "MIT",
   "dependencies": {
     "@babel/runtime": "^7.1.5",
-    "@line/bot-sdk": "6.3.0",
+    "@line/bot-sdk": "^6.8.4",
     "animequote": "1.1.1",
     "body-parser": "^1.18.3",
     "express": "4.16.4",
