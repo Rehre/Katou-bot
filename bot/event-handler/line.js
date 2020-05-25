@@ -19,7 +19,7 @@ export default class LineEventHandler {
     const reqProfile = {
       userId: event.source.userId,
       groupId: event.source.groupId || null,
-      roomId: event.source.roomId || null
+      roomId: event.source.roomId || null,
     };
 
     if (event.type === "join") {
@@ -41,7 +41,7 @@ export default class LineEventHandler {
       if (msgText === "katou") {
         return client
           .getProfile(reqProfile.userId)
-          .then(profile =>
+          .then((profile) =>
             client.replyMessage(
               replyToken,
               Wrapper.replyText(botApi.sendReply(profile.displayName))
@@ -87,10 +87,10 @@ export default class LineEventHandler {
 
         botApi
           .getWiki(keyword)
-          .then(result => {
+          .then((result) => {
             return client.replyMessage(replyToken, Wrapper.replyText(result));
           })
-          .catch(err => {
+          .catch((err) => {
             return client.replyMessage(replyToken, Wrapper.replyText(err));
           });
       }
@@ -105,10 +105,10 @@ export default class LineEventHandler {
 
         botApi
           .getImageUrl(keyword)
-          .then(result => {
+          .then((result) => {
             return client
               .replyMessage(replyToken, Wrapper.replyImg(result, result))
-              .catch(err => {
+              .catch((err) => {
                 return client.replyMessage(
                   replyToken,
                   Wrapper.replyText(
@@ -117,7 +117,7 @@ export default class LineEventHandler {
                 );
               });
           })
-          .catch(err => {
+          .catch((err) => {
             return client.replyMessage(replyToken, Wrapper.replyText(err));
           });
       }
@@ -136,10 +136,10 @@ export default class LineEventHandler {
 
         botApi
           .getWeather(keyword)
-          .then(result => {
+          .then((result) => {
             return client.replyMessage(replyToken, Wrapper.replyText(result));
           })
-          .catch(err => {
+          .catch((err) => {
             return client.replyMessage(replyToken, Wrapper.replyText(err));
           });
       }
@@ -154,7 +154,7 @@ export default class LineEventHandler {
 
         botApi
           .getVideo(keyword)
-          .then(result => {
+          .then((result) => {
             if (source !== "room" && source !== "group")
               return client
                 .replyMessage(
@@ -170,7 +170,7 @@ export default class LineEventHandler {
               )
               .catch(console.log("Error"));
           })
-          .catch(err => {
+          .catch((err) => {
             return client
               .replyMessage(replyToken, Wrapper.replyText(err))
               .catch(console.log("Error"));
@@ -190,11 +190,11 @@ export default class LineEventHandler {
           );
 
         botApi
-          .translateText(text, lang)
-          .then(result => {
+          .translateText(text, lang.replace("-"))
+          .then((result) => {
             return client.replyMessage(replyToken, Wrapper.replyText(result));
           })
-          .catch(err => {
+          .catch((err) => {
             return client.replyMessage(replyToken, Wrapper.replyText(err));
           });
       }
@@ -210,13 +210,13 @@ export default class LineEventHandler {
 
         botApi
           .getLocation(keyword)
-          .then(result => {
+          .then((result) => {
             return client.replyMessage(
               replyToken,
               Wrapper.replyLocation(keyword, result)
             );
           })
-          .catch(err => {
+          .catch((err) => {
             return client.replyMessage(replyToken, Wrapper.replyText(err));
           });
       }
@@ -231,13 +231,11 @@ export default class LineEventHandler {
           );
 
         keyword = encodeURI(keyword);
-        const imgUrl = `${constants.CHARTAPI_URL}${keyword}${
-          constants.CHARTAPI_QUERY
-        }`;
+        const imgUrl = `${constants.CHARTAPI_URL}${keyword}${constants.CHARTAPI_QUERY}`;
 
         return client
           .replyMessage(replyToken, Wrapper.replyImg(imgUrl, imgUrl))
-          .catch(err => {
+          .catch((err) => {
             return client.replyMessage(
               replyToken,
               Wrapper.replyText("Silahkan masukan teks yang ingin diubah")
@@ -256,17 +254,15 @@ export default class LineEventHandler {
 
         botApi
           .getYoutubeUrl(keyword)
-          .then(result => {
+          .then((result) => {
             return client.replyMessage(
               replyToken,
               Wrapper.replyText(
-                `${result.title}\n\n Link download : ${
-                  constants.MP3YOUTUBE_URL
-                }${result.link}`
+                `${result.title}\n\n Link download : ${constants.MP3YOUTUBE_URL}${result.link}`
               )
             );
           })
-          .catch(err => {
+          .catch((err) => {
             return client.replyMessage(replyToken, Wrapper.replyText(err));
           });
       }
@@ -282,17 +278,15 @@ export default class LineEventHandler {
 
         botApi
           .getLoveMeter(msgText)
-          .then(result => {
+          .then((result) => {
             return client.replyMessage(
               replyToken,
               Wrapper.replyText(
-                `Persentase pasangan ${result.fname} dan ${result.sname} :\n\n${
-                  result.percentage
-                }%\n\nSaran: ${result.result}`
+                `Persentase pasangan ${result.fname} dan ${result.sname} :\n\n${result.percentage}%\n\nSaran: ${result.result}`
               )
             );
           })
-          .catch(err => {
+          .catch((err) => {
             return client.replyMessage(replyToken, Wrapper.replyText(err));
           });
       }
@@ -302,9 +296,7 @@ export default class LineEventHandler {
         return client.replyMessage(
           replyToken,
           Wrapper.replyText(
-            `\"${quotesItem.quotesentence}\"\nBy : ${
-              quotesItem.quotecharacter
-            }\nFrom :  ${quotesItem.quoteanime}`
+            `\"${quotesItem.quotesentence}\"\nBy : ${quotesItem.quotecharacter}\nFrom :  ${quotesItem.quoteanime}`
           )
         );
       }
@@ -364,13 +356,13 @@ export default class LineEventHandler {
 
         botApi
           .getOsuProfile(keyword, mode)
-          .then(result => {
+          .then((result) => {
             return client.replyMessage(
               replyToken,
               Wrapper.replyOsuProfile(result)
             );
           })
-          .catch(err => {
+          .catch((err) => {
             return client.replyMessage(replyToken, Wrapper.replyText(err));
           });
       }
@@ -382,16 +374,16 @@ export default class LineEventHandler {
             Wrapper.replyImg(
               constants.KATOULEAVEIMG_URL,
               constants.KATOULEAVEIMG_URL
-            )
+            ),
           ])
-          .then(result => {
+          .then((result) => {
             if (source === "room") {
               client.leaveRoom(reqProfile.roomId);
             } else if (source === "group") {
               client.leaveGroup(reqProfile.groupId);
             }
           })
-          .catch(err => {
+          .catch((err) => {
             return client.replyMessage(
               replyToken,
               Wrapper.replyText(

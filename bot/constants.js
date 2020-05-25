@@ -7,7 +7,7 @@ export default {
   GOOGLECLOUDAPI_KEY: process.env.GOOGLECLOUDAPI_KEY,
   INSTAGRAM_URL: "https://www.instagram.com/",
   YANDEXTRANSLATE_URL:
-    "https://translate.yandex.net/api/v1.5/tr/translate?key=",
+    "https://translate.yandex.net/api/v1.5/tr.json/translate?key=",
   YANDEXTRANSLATE_KEY: process.env.YANDEXTRANSLATE_KEY,
   YANDEXTEXT_QUERY: "&text=",
   YANDEXLANG_QUERY: "&lang=",

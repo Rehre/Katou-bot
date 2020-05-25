@@ -87,6 +87,7 @@ export default class BotApi {
     }
   }
 
+  // TODO: library doesn't work anymore fix this later
   getImageUrl(keyword) {
     return new Promise((resolve, reject) => {
       gis(
@@ -184,6 +185,7 @@ export default class BotApi {
     });
   }
 
+  // TODO: api doesn't work anymore fix this later
   async translateText(text, lang) {
     try {
       const response = await rp({
@@ -191,10 +193,7 @@ export default class BotApi {
       });
 
       if (!response) throw new Error("Error fetching: response");
-
-      return `${response}`
-        .match(/<text>.*?<\/text>/g)[0]
-        .replace(/<text>|<\/text>/g, "");
+      return `${JSON.parse(response).text}`;
     } catch (err) {
       throw new Error(
         `Request gagal atau kode bahasa tidak ditemukan ERR: ${err}`
@@ -361,7 +360,10 @@ export default class BotApi {
   }
 }
 // for development
-// const botApi = new BotApi();
+const botApi = new BotApi();
 // console.log(
-//   botApi.getLoveMeter("akmal:katou").catch((err) => console.log(err))
+//   botApi
+//     .translateText("hey you", "en-id")
+//     .then((result) => console.log(result))
+//     .catch((err) => console.log(err))
 // );

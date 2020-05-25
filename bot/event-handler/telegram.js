@@ -23,7 +23,7 @@ export default class TelegramEventHandler {
       "/translate",
       "/osu",
       "/help",
-      "/ai"
+      "/ai",
     ];
   }
 
@@ -49,7 +49,7 @@ export default class TelegramEventHandler {
       sendBack({});
       return;
     }
-    if (!this.commandList.some(item => command.includes(item))) {
+    if (!this.commandList.some((item) => command.includes(item))) {
       sendBack({});
       return;
     }
@@ -68,10 +68,10 @@ export default class TelegramEventHandler {
 
       botApi
         .getNLP(keyword)
-        .then(result => {
+        .then((result) => {
           sendBack(Wrapper.replyTextMessage(receiverChatID, result));
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
     }
 
     if (command.includes("/help")) {
@@ -117,10 +117,10 @@ export default class TelegramEventHandler {
 
       botApi
         .getWiki(keyword.trim())
-        .then(result => {
+        .then((result) => {
           sendBack(Wrapper.replyTextMessage(receiverChatID, result));
         })
-        .catch(err => {
+        .catch((err) => {
           sendBack(Wrapper.replyTextMessage(receiverChatID, err));
         });
     }
@@ -163,10 +163,10 @@ export default class TelegramEventHandler {
 
       botApi
         .getWeather(keyword.trim())
-        .then(result => {
+        .then((result) => {
           sendBack(Wrapper.replyTextMessage(receiverChatID, result));
         })
-        .catch(err => {
+        .catch((err) => {
           sendBack(Wrapper.replyTextMessage(receiverChatID, err.message));
         });
     }
@@ -204,10 +204,10 @@ export default class TelegramEventHandler {
 
       botApi
         .getImageUrl(keyword)
-        .then(result => {
+        .then((result) => {
           sendBack(Wrapper.replyPhoto(receiverChatID, result));
         })
-        .catch(err => {
+        .catch((err) => {
           sendBack(Wrapper.replyTextMessage(receiverChatID, err));
         });
     }
@@ -228,7 +228,7 @@ export default class TelegramEventHandler {
 
       botApi
         .getYoutubeUrl(keyword)
-        .then(result => {
+        .then((result) => {
           sendBack(
             Wrapper.replyTextMessage(
               receiverChatID,
@@ -236,7 +236,7 @@ export default class TelegramEventHandler {
             )
           );
         })
-        .catch(err => {
+        .catch((err) => {
           sendBack(Wrapper.replyTextMessage(receiverChatID, err));
         });
     }
@@ -257,7 +257,7 @@ export default class TelegramEventHandler {
 
       botApi
         .getLocation(keyword)
-        .then(result => {
+        .then((result) => {
           sendBack(
             Wrapper.replyLocation(
               receiverChatID,
@@ -266,7 +266,7 @@ export default class TelegramEventHandler {
             )
           );
         })
-        .catch(err => {
+        .catch((err) => {
           sendBack(Wrapper.replyTextMessage(receiverChatID, err));
         });
     }
@@ -309,17 +309,15 @@ export default class TelegramEventHandler {
 
       botApi
         .getYoutubeUrl(keyword)
-        .then(result => {
+        .then((result) => {
           sendBack(
             Wrapper.replyTextMessage(
               receiverChatID,
-              `${result.title}\n\n Link download : ${constants.MP3YOUTUBE_URL}${
-                result.link
-              }`
+              `${result.title}\n\n Link download : ${constants.MP3YOUTUBE_URL}${result.link}`
             )
           );
         })
-        .catch(err => {
+        .catch((err) => {
           sendBack(Wrapper.replyTextMessage(receiverChatID, err));
         });
     }
@@ -330,9 +328,7 @@ export default class TelegramEventHandler {
       sendBack(
         Wrapper.replyTextMessage(
           receiverChatID,
-          `\"${quotesItem.quotesentence}\"\nBy : ${
-            quotesItem.quotecharacter
-          }\nFrom :  ${quotesItem.quoteanime}`
+          `\"${quotesItem.quotesentence}\"\nBy : ${quotesItem.quotecharacter}\nFrom :  ${quotesItem.quoteanime}`
         )
       );
     }
@@ -353,17 +349,15 @@ export default class TelegramEventHandler {
 
       botApi
         .getLoveMeter(keyword)
-        .then(result => {
+        .then((result) => {
           sendBack(
             Wrapper.replyTextMessage(
               receiverChatID,
-              `Persentase pasangan ${result.fname} dan ${result.sname} :\n\n${
-                result.percentage
-              }%\n\nSaran: ${result.result}`
+              `Persentase pasangan ${result.fname} dan ${result.sname} :\n\n${result.percentage}%\n\nSaran: ${result.result}`
             )
           );
         })
-        .catch(err => {
+        .catch((err) => {
           sendBack(Wrapper.replyTextMessage(receiverChatID, err));
         });
     }
@@ -387,11 +381,11 @@ export default class TelegramEventHandler {
       const text = keywordArray[1];
 
       botApi
-        .translateText(text, lang)
-        .then(result => {
+        .translateText(text, lang.replace(":", "-"))
+        .then((result) => {
           sendBack(Wrapper.replyTextMessage(receiverChatID, result));
         })
-        .catch(err => {
+        .catch((err) => {
           sendBack(Wrapper.replyTextMessage(receiverChatID, err));
         });
     }
@@ -442,10 +436,10 @@ export default class TelegramEventHandler {
 
       botApi
         .getOsuProfile(user, mode)
-        .then(result => {
+        .then((result) => {
           sendBack(Wrapper.replyOsuProfile(receiverChatID, result));
         })
-        .catch(err => {
+        .catch((err) => {
           sendBack(Wrapper.replyTextMessage(receiverChatID, err));
         });
     }
