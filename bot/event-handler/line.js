@@ -190,7 +190,7 @@ export default class LineEventHandler {
           );
 
         botApi
-          .translateText(text, lang.replace("-"))
+          .translateText(text, lang.replace(":", "-"))
           .then((result) => {
             return client.replyMessage(replyToken, Wrapper.replyText(result));
           })

@@ -317,8 +317,7 @@ function () {
           }
         });
       });
-    } // TODO: api doesn't work anymore fix this later
-
+    }
   }, {
     key: "translateText",
     value: function () {

@@ -129,7 +129,7 @@ function () {
           var text = msgText.substr(24).trim();
           var lang = msgText.slice(18, 24).trim();
           if (lang.length <= 0 || text.length <= 0) return client.replyMessage(replyToken, _line.default.replyText("Silahkan masukan kode bahasa dan teks yang ingin diterjemahkan"));
-          botApi.translateText(text, lang.replace("-")).then(function (result) {
+          botApi.translateText(text, lang.replace(":", "-")).then(function (result) {
             return client.replyMessage(replyToken, _line.default.replyText(result));
           }).catch(function (err) {
             return client.replyMessage(replyToken, _line.default.replyText(err));
