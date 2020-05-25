@@ -185,7 +185,6 @@ export default class BotApi {
     });
   }
 
-  // TODO: api doesn't work anymore fix this later
   async translateText(text, lang) {
     try {
       const response = await rp({
