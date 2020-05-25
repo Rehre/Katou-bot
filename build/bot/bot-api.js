@@ -211,6 +211,7 @@ function () {
           searchTerm: keyword,
           queryStringAddition: "&safe=active&tbs=isz:m"
         }, function (err, result) {
+          console.log(err, result);
           if (err) reject("Gambar ".concat(keyword, " tidak ditemukan"));
           result === undefined ? reject("Gambar ".concat(keyword, " tidak ditemukan")) : null;
           result[_this.getRandomIndex(result.length)] === undefined ? reject("Gambar ".concat(keyword, " tidak ditemukan")) : resolve(result[_this.getRandomIndex(result.length)].url);
@@ -476,10 +477,11 @@ function () {
                 person2 = couple[1];
                 _context6.next = 6;
                 return (0, _requestPromise.default)({
-                  uri: "".concat(_constants.default.MASHAPE_LOVEMETERURL).concat(person1).concat(_constants.default.MASHAPE_LOVEMETERQUERY).concat(person2),
+                  uri: "".concat(_constants.default.RAPID_API_LOVEMETERURL).concat(person1).concat(_constants.default.RAPID_API_LOVEMETERQUERY).concat(person2),
                   json: true,
                   headers: {
-                    "X-Mashape-Key": "".concat(_constants.default.MASHAPE_APPKEY),
+                    "x-rapidapi-host": _constants.default.RAPID_API_LOVEMETER_HOST,
+                    "x-rapidapi-key": _constants.default.RAPID_API_KEY,
                     Accept: "application/json"
                   }
                 });
@@ -582,18 +584,9 @@ function () {
   return BotApi;
 }(); // for development
 // const botApi = new BotApi();
-// console.time("time to response");
-// console.log(botApi.getAnimeQuote())
-// botApi
-//   .getOsuProfile("rehre", 2)
-//   .then(result => {
-//     console.log(result);
-//     console.timeEnd("time to response");
-//   })
-//   .catch(error => {
-//     console.log(error);
-//     console.timeEnd("time to response");
-//   });
+// console.log(
+//   botApi.getLoveMeter("akmal:katou").catch((err) => console.log(err))
+// );
 
 
 exports.default = BotApi;

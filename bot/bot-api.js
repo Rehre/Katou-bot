@@ -9,7 +9,7 @@ import constants from "./constants";
 
 export default class BotApi {
   constructor() {
-    this.getRandomIndex = length => Math.floor(Math.random() * length);
+    this.getRandomIndex = (length) => Math.floor(Math.random() * length);
   }
 
   async getNLP(keyword) {
@@ -18,8 +18,8 @@ export default class BotApi {
       method: "POST",
       json: true,
       body: {
-        keyword
-      }
+        keyword,
+      },
     });
 
     if (!response) throw new Error("Error fetching: response");
@@ -30,7 +30,7 @@ export default class BotApi {
     const replyString = [
       "Iya, " + username + " ?",
       "Ada apa " + username + " ?",
-      "Ada yang bisa dibantu " + username + " ?"
+      "Ada yang bisa dibantu " + username + " ?",
     ];
 
     return replyString[this.getRandomIndex(replyString.length)];
@@ -42,7 +42,7 @@ export default class BotApi {
       "Hari ini mungkin agak menyusahkan bagimu jadi berhati-hatilah",
       "Hari ini mungkin kamu akan menemukan jodohmu",
       "Hari ini mungkin akan sangat menguntungkan bagi keuanganmu",
-      "Tiada hari yang lebih baik dari hari ini bagimu"
+      "Tiada hari yang lebih baik dari hari ini bagimu",
     ];
 
     return ramalan[this.getRandomIndex(ramalan.length)];
@@ -54,7 +54,7 @@ export default class BotApi {
 
       const response = await rp({
         uri: constants.WIKIPEDIA_URL + keywordEncoded,
-        json: true
+        json: true,
       });
 
       if (!response) throw new Error("Error fetching: response");
@@ -92,9 +92,11 @@ export default class BotApi {
       gis(
         {
           searchTerm: keyword,
-          queryStringAddition: "&safe=active&tbs=isz:m"
+          queryStringAddition: "&safe=active&tbs=isz:m",
         },
         (err, result) => {
+          console.log(err, result);
+
           if (err) reject(`Gambar ${keyword} tidak ditemukan`);
           result === undefined
             ? reject(`Gambar ${keyword} tidak ditemukan`)
@@ -111,10 +113,8 @@ export default class BotApi {
   async getWeather(keyword) {
     try {
       const response = await rp({
-        uri: `${constants.OPENWEATHERMAP_URL}${keyword}${
-          constants.OPENWEATHERMAP_QUERY
-        }${constants.OPENWEATHERMAP_APPID}`,
-        json: true
+        uri: `${constants.OPENWEATHERMAP_URL}${keyword}${constants.OPENWEATHERMAP_QUERY}${constants.OPENWEATHERMAP_APPID}`,
+        json: true,
       });
 
       if (!response) throw new Error("Error fetching: response");
@@ -124,14 +124,10 @@ export default class BotApi {
         degree: `${response.main.temp} C`,
         humidity: `${response.main.humidity}%`,
         pressure: `${response.main.pressure} HPa`,
-        windSpeed: `${response.wind.speed} m/s`
+        windSpeed: `${response.wind.speed} m/s`,
       };
 
-      return `Cuaca di kota ${resultData.cityName} : \nSuhu : ${
-        resultData.degree
-      } \nKelembaban : ${resultData.humidity} \nTekanan Udara : ${
-        resultData.pressure
-      }\nKecepatan Angin : ${resultData.windSpeed} `;
+      return `Cuaca di kota ${resultData.cityName} : \nSuhu : ${resultData.degree} \nKelembaban : ${resultData.humidity} \nTekanan Udara : ${resultData.pressure}\nKecepatan Angin : ${resultData.windSpeed} `;
     } catch (err) {
       throw new Error(`Request gagal atau kota tidak ditemukan ERR: ${err}`);
     }
@@ -146,7 +142,7 @@ export default class BotApi {
           order: "relevance",
           type: "video",
           safeSearch: "strict",
-          key: constants.GOOGLECLOUDAPI_KEY
+          key: constants.GOOGLECLOUDAPI_KEY,
         },
         (err, result) => {
           if (
@@ -161,7 +157,7 @@ export default class BotApi {
             let resultVideo = {
               link: result[randomIndex].link,
               title: result[randomIndex].title,
-              thumbnail: result[randomIndex].thumbnails.default.url
+              thumbnail: result[randomIndex].thumbnails.default.url,
             };
 
             ytdlCore.getInfo(resultVideo.link, {}, (err, info) => {
@@ -191,11 +187,7 @@ export default class BotApi {
   async translateText(text, lang) {
     try {
       const response = await rp({
-        uri: `${constants.YANDEXTRANSLATE_URL}${constants.YANDEXTRANSLATE_KEY}${
-          constants.YANDEXTEXT_QUERY
-        }${text}${constants.YANDEXLANG_QUERY}${lang}${
-          constants.YANDEX_OTHERQUERY
-        }`
+        uri: `${constants.YANDEXTRANSLATE_URL}${constants.YANDEXTRANSLATE_KEY}${constants.YANDEXTEXT_QUERY}${text}${constants.YANDEXLANG_QUERY}${lang}${constants.YANDEX_OTHERQUERY}`,
       });
 
       if (!response) throw new Error("Error fetching: response");
@@ -215,10 +207,8 @@ export default class BotApi {
       const encodedKeyword = encodeURI(keyword);
 
       const response = await rp({
-        uri: `${constants.GMAPSJS_URL}${encodedKeyword}${
-          constants.GMAPSJS_QUERY
-        }${constants.GMAPSJS_KEY}`,
-        json: true
+        uri: `${constants.GMAPSJS_URL}${encodedKeyword}${constants.GMAPSJS_QUERY}${constants.GMAPSJS_KEY}`,
+        json: true,
       });
 
       if (!response) throw new Error("Error Fetching: response");
@@ -249,7 +239,7 @@ export default class BotApi {
           order: "relevance",
           type: "video",
           safeSearch: "strict",
-          key: constants.GOOGLECLOUDAPI_KEY
+          key: constants.GOOGLECLOUDAPI_KEY,
         },
         (err, result) => {
           if (
@@ -262,7 +252,7 @@ export default class BotApi {
           } else {
             let resultVideo = {
               link: result[0].link,
-              title: result[0].title
+              title: result[0].title,
             };
 
             resolve(resultVideo);
@@ -279,14 +269,13 @@ export default class BotApi {
       const person2 = couple[1];
 
       const response = await rp({
-        uri: `${constants.MASHAPE_LOVEMETERURL}${person1}${
-          constants.MASHAPE_LOVEMETERQUERY
-        }${person2}`,
+        uri: `${constants.RAPID_API_LOVEMETERURL}${person1}${constants.RAPID_API_LOVEMETERQUERY}${person2}`,
         json: true,
         headers: {
-          "X-Mashape-Key": `${constants.MASHAPE_APPKEY}`,
-          Accept: "application/json"
-        }
+          "x-rapidapi-host": constants.RAPID_API_LOVEMETER_HOST,
+          "x-rapidapi-key": constants.RAPID_API_KEY,
+          Accept: "application/json",
+        },
       });
 
       if (!response) throw new Error("Error fetching: response");
@@ -314,12 +303,12 @@ export default class BotApi {
 
       osuApi
         .getUser({ u: keyword, m: mode })
-        .then(resultProfiles => {
+        .then((resultProfiles) => {
           resultProfile = resultProfiles;
 
           return osuApi.getUserBest({ u: keyword, m: mode, limit: 1 });
         })
-        .then(resultBests => {
+        .then((resultBests) => {
           resultBest = resultBests;
 
           deskripsi_profil =
@@ -337,13 +326,13 @@ export default class BotApi {
               withBeatmap: false,
               userId: resultProfile[0].user_id,
               username: resultProfile[0].username,
-              deskripsi_profil
+              deskripsi_profil,
             });
           }
 
           return osuApi.getBeatmaps({ b: resultBest[0].beatmap_id, limit: 1 });
         })
-        .then(resultBeatmap => {
+        .then((resultBeatmap) => {
           const beatmapTitle = resultBeatmap[0].title;
 
           if (beatmapTitle.length > 26) {
@@ -362,10 +351,10 @@ export default class BotApi {
             username: resultProfile[0].username,
             deskripsi_profil,
             beatmapset_id: resultBeatmap[0].beatmapset_id,
-            deskripsi_best
+            deskripsi_best,
           });
         })
-        .catch(err => {
+        .catch((err) => {
           reject("Request gagal atau tidak dapat menemukan user osu!");
         });
     });
@@ -373,15 +362,6 @@ export default class BotApi {
 }
 // for development
 // const botApi = new BotApi();
-// console.time("time to response");
-// console.log(botApi.getAnimeQuote())
-// botApi
-//   .getOsuProfile("rehre", 2)
-//   .then(result => {
-//     console.log(result);
-//     console.timeEnd("time to response");
-//   })
-//   .catch(error => {
-//     console.log(error);
-//     console.timeEnd("time to response");
-//   });
+// console.log(
+//   botApi.getLoveMeter("akmal:katou").catch((err) => console.log(err))
+// );

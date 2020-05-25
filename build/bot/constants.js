@@ -23,9 +23,10 @@ var _default = {
   CHARTAPI_QUERY: "&chts=FFFFFF,24&chf=bg,s,000000",
   $9GAG_URL: "https://9gag.com/",
   MP3YOUTUBE_URL: "http://mp3you.tube/get/?direct=",
-  MASHAPE_LOVEMETERURL: "https://love-calculator.p.mashape.com/getPercentage?fname=",
-  MASHAPE_LOVEMETERQUERY: "&sname=",
-  MASHAPE_APPKEY: process.env.MASHAPE_APPKEY,
+  RAPID_API_LOVEMETER_HOST: "love-calculator.p.rapidapi.com",
+  RAPID_API_LOVEMETERURL: "https://love-calculator.p.rapidapi.com/getPercentage?fname=",
+  RAPID_API_LOVEMETERQUERY: "&sname=",
+  RAPID_API_KEY: process.env.RAPID_API_KEY,
   OSUAPI_KEY: process.env.OSUAPI_KEY,
   KATOULEAVEIMG_URL: "https://image.ibb.co/kYhBYa/1d1827a76c94bfacc205047717824948279041b1_hq.jpg",
   TELEGRAM_HELP: "List keywords:\n/katou - panggil katou\n/ramal - ramal dirimu\n/say - buat katou bicara\n/wiki - tanya katou apa saja\n/hbd - ucapkan selamat ulang tahun\n/weather - dapatkan cuaca\n/calc - suruh katou untuk menghitung\n/pic - cari gambar\n/video - cari video\n/location - cari lokasi\n/write - suruh katou menulis\n/music - suruh katou mencari musik\n/animequote - dapatkan quote dari anime\n/lovemeter - dapatkan persentase cinta pasangan\n/translate - katou akan menerjemahkan teks\n/osu - dapatkan profile osu kamu\n"
