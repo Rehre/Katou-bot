@@ -1,8 +1,14 @@
-import Wrapper from "../reply-wrapper/line";
-import BotApi from "../bot-api";
-import constants from "../constants";
+import LineWrapper from '../reply-wrapper/line';
+import BotApi from '../bot-api';
+import constants from '../constants';
 
+/**
+ * Line event handler
+ */
 export default class LineEventHandler {
+  /**
+   * @param {LineClient} client Line client from line bot nodejs sdk
+   */
   constructor(client) {
     this.client = client;
     this.botApi = new BotApi();
@@ -10,6 +16,11 @@ export default class LineEventHandler {
     this.handle = this.handle.bind(this);
   }
 
+  /**
+   * function to handle incoming line event
+   * @param {object} event line event object
+   * @return {Promise} a returned promise
+   */
   handle(event) {
     const client = this.client;
     const botApi = this.botApi;
@@ -22,335 +33,242 @@ export default class LineEventHandler {
       roomId: event.source.roomId || null,
     };
 
-    if (event.type === "join") {
+    if (event.type === 'join') {
       return client.replyMessage(
         replyToken,
-        Wrapper.replyText(
+        LineWrapper.replyText(
           'Terima kasih telah mengundang bot ini.\n\nSilahkan ketik "Katou keyword" untuk melihat keyword.'
         )
       );
     }
 
-    if (event.type === "message") {
-      if (event.message.type !== "text") return Promise.resolve(null);
+    if (event.type === 'message') {
+      if (event.message.type !== 'text') return Promise.resolve(null);
 
       const msgText = event.message.text.toLowerCase();
 
-      if (!msgText.includes("katou")) return Promise.resolve(null);
+      if (!msgText.split('')[0].trim() !== 'katou') {
+        return Promise.resolve(null);
+      }
 
-      if (msgText === "katou") {
+      if (msgText === 'katou') {
         return client
           .getProfile(reqProfile.userId)
           .then((profile) =>
             client.replyMessage(
               replyToken,
-              Wrapper.replyText(botApi.sendReply(profile.displayName))
+              LineWrapper.replyText(botApi.sendReply(profile.displayName))
             )
           )
           .catch(() =>
             client.replyMessage(
               replyToken,
-              Wrapper.replyText(botApi.sendReply("Tanpa Nama"))
+              LineWrapper.replyText(botApi.sendReply('Tanpa Nama'))
             )
           );
       }
 
-      if (msgText === "katou keyword") {
-        return client.replyMessage(replyToken, Wrapper.replyKeyword());
+      if (msgText === 'katou keyword') {
+        return client.replyMessage(replyToken, LineWrapper.replyKeyword());
       }
 
-      if (msgText === "katou ramal") {
+      if (msgText === 'katou ramal') {
         return client.replyMessage(
           replyToken,
-          Wrapper.replyText(botApi.getRamal())
+          LineWrapper.replyText(botApi.getRamal())
         );
       }
 
-      if (msgText.includes("katou berapa")) {
-        const calcText = msgText.substr(13);
-
-        if (calcText.length === 0) {
-          return client.replyMessage(
-            replyToken,
-            Wrapper.replyText(`Tolong masukan angka yang ingin dihitung`)
-          );
-        }
-
-        return client.replyMessage(
-          replyToken,
-          Wrapper.replyText(`Hasil dari ${calcText} : ${eval(calcText)}`)
-        );
-      }
-
-      if (msgText.includes("katou apa itu")) {
+      if (msgText.includes('katou apa itu')) {
         const keyword = msgText.substr(13);
 
         botApi
           .getWiki(keyword)
           .then((result) => {
-            return client.replyMessage(replyToken, Wrapper.replyText(result));
+            return client.replyMessage(
+              replyToken,
+              LineWrapper.replyText(result)
+            );
           })
           .catch((err) => {
-            return client.replyMessage(replyToken, Wrapper.replyText(err));
+            return client.replyMessage(
+              replyToken,
+              LineWrapper.replyText(err.message)
+            );
           });
       }
 
-      if (msgText.includes("katou cari gambar")) {
-        const keyword = encodeURI(msgText.substr(18));
-        if (keyword.length <= 0)
-          return client.replyMessage(
-            replyToken,
-            Wrapper.replyText("Silahkan masukan nama gambar yang ingin dicari")
-          );
-
-        botApi
-          .getImageUrl(keyword)
-          .then((result) => {
-            return client
-              .replyMessage(replyToken, Wrapper.replyImg(result, result))
-              .catch((err) => {
-                return client.replyMessage(
-                  replyToken,
-                  Wrapper.replyText(
-                    "Gambar yang ditemukan terlalu besar untuk dimuat silahkan coba lagi."
-                  )
-                );
-              });
-          })
-          .catch((err) => {
-            return client.replyMessage(replyToken, Wrapper.replyText(err));
-          });
-      }
-
-      if (msgText.includes("katou ucapkan selamat ulang tahun ke")) {
+      if (msgText.includes('katou ucapkan selamat ulang tahun ke')) {
         const keyword = msgText.substr(37);
 
         return client.replyMessage(
           replyToken,
-          Wrapper.replyText(`Selamat ulang tahun ${keyword} :D`)
+          LineWrapper.replyText(`Selamat ulang tahun ${keyword} :D`)
         );
       }
 
-      if (msgText.includes("katou cuaca")) {
-        let keyword = msgText.substr(12);
+      if (msgText.includes('katou cuaca')) {
+        const keyword = msgText.substr(12);
 
         botApi
           .getWeather(keyword)
           .then((result) => {
-            return client.replyMessage(replyToken, Wrapper.replyText(result));
-          })
-          .catch((err) => {
-            return client.replyMessage(replyToken, Wrapper.replyText(err));
-          });
-      }
-
-      if (msgText.includes("katou cari video")) {
-        const keyword = msgText.substr(17);
-        if (keyword.length <= 0)
-          return client.replyMessage(
-            replyToken,
-            Wrapper.replyText("Silahkan masukan nama video yang ingin dicari")
-          );
-
-        botApi
-          .getVideo(keyword)
-          .then((result) => {
-            if (source !== "room" && source !== "group")
-              return client
-                .replyMessage(
-                  replyToken,
-                  Wrapper.replyText(`${result.title} \n ${result.link}`)
-                )
-                .catch(console.log("Error"));
-
-            return client
-              .replyMessage(
-                replyToken,
-                Wrapper.replyText(`${result.title} \n ${result.link}`)
-              )
-              .catch(console.log("Error"));
-          })
-          .catch((err) => {
-            return client
-              .replyMessage(replyToken, Wrapper.replyText(err))
-              .catch(console.log("Error"));
-          });
-      }
-
-      if (msgText.includes("katou terjemahkan")) {
-        const text = msgText.substr(24).trim();
-        const lang = msgText.slice(18, 24).trim();
-
-        if (lang.length <= 0 || text.length <= 0)
-          return client.replyMessage(
-            replyToken,
-            Wrapper.replyText(
-              "Silahkan masukan kode bahasa dan teks yang ingin diterjemahkan"
-            )
-          );
-
-        botApi
-          .translateText(text, lang.replace(":", "-"))
-          .then((result) => {
-            return client.replyMessage(replyToken, Wrapper.replyText(result));
-          })
-          .catch((err) => {
-            return client.replyMessage(replyToken, Wrapper.replyText(err));
-          });
-      }
-
-      if (msgText.includes("katou cari lokasi")) {
-        const keyword = msgText.substr(17).trim();
-
-        if (keyword.length <= 0)
-          return client.replyMessage(
-            replyToken,
-            Wrapper.replyText("Silahkan masukan lokasi yang ingin dicari")
-          );
-
-        botApi
-          .getLocation(keyword)
-          .then((result) => {
             return client.replyMessage(
               replyToken,
-              Wrapper.replyLocation(keyword, result)
+              LineWrapper.replyText(result)
             );
           })
           .catch((err) => {
-            return client.replyMessage(replyToken, Wrapper.replyText(err));
+            return client.replyMessage(
+              replyToken,
+              LineWrapper.replyText(err.message)
+            );
           });
       }
 
-      if (msgText.includes("katou tulis")) {
-        let keyword = msgText.substr(12);
+      if (msgText.includes('katou terjemahkan')) {
+        const text = msgText.substr(24).trim();
+        const lang = msgText.slice(18, 24).trim();
 
-        if (keyword.length <= 0)
+        if (lang.length <= 0 || text.length <= 0) {
           return client.replyMessage(
             replyToken,
-            Wrapper.replyText("Silahkan masukan teks yang ingin diubah")
+            LineWrapper.replyText(
+              'Silahkan masukan kode bahasa dan teks yang ingin diterjemahkan'
+            )
           );
+        }
+
+        botApi
+          .translateText(text, lang.replace(':', '-'))
+          .then((result) => {
+            return client.replyMessage(
+              replyToken,
+              LineWrapper.replyText(result)
+            );
+          })
+          .catch((err) => {
+            return client.replyMessage(
+              replyToken,
+              LineWrapper.replyText(err.message)
+            );
+          });
+      }
+
+      if (msgText.includes('katou tulis')) {
+        let keyword = msgText.substr(12);
+
+        if (keyword.length <= 0) {
+          return client.replyMessage(
+            replyToken,
+            LineWrapper.replyText('Silahkan masukan teks yang ingin diubah')
+          );
+        }
 
         keyword = encodeURI(keyword);
         const imgUrl = `${constants.CHARTAPI_URL}${keyword}${constants.CHARTAPI_QUERY}`;
 
-        return client
-          .replyMessage(replyToken, Wrapper.replyImg(imgUrl, imgUrl))
-          .catch((err) => {
-            return client.replyMessage(
-              replyToken,
-              Wrapper.replyText("Silahkan masukan teks yang ingin diubah")
-            );
-          });
+        return client.replyMessage(
+          replyToken,
+          LineWrapper.replyImg(imgUrl, imgUrl)
+        );
       }
 
-      if (msgText.includes("katou download musik")) {
-        const keyword = msgText.substr(21).trim();
-
-        if (keyword.length <= 0)
-          return client.replyMessage(
-            replyToken,
-            Wrapper.replyText("Silahkan masukan nama musiknya")
-          );
-
-        botApi
-          .getYoutubeUrl(keyword)
-          .then((result) => {
-            return client.replyMessage(
-              replyToken,
-              Wrapper.replyText(
-                `${result.title}\n\n Link download : ${constants.MP3YOUTUBE_URL}${result.link}`
-              )
-            );
-          })
-          .catch((err) => {
-            return client.replyMessage(replyToken, Wrapper.replyText(err));
-          });
-      }
-
-      if (msgText.includes("katou lovemeter")) {
+      if (msgText.includes('katou lovemeter')) {
         const keyword = msgText.substr(16).trim();
 
-        if (keyword.length <= 0)
+        if (keyword.length <= 0) {
           return client.replyMessage(
             replyToken,
-            Wrapper.replyText("Silahkan masukan nama pasangannya")
+            LineWrapper.replyText('Silahkan masukan nama pasangannya')
           );
+        }
 
         botApi
           .getLoveMeter(msgText)
           .then((result) => {
             return client.replyMessage(
               replyToken,
-              Wrapper.replyText(
+              LineWrapper.replyText(
                 `Persentase pasangan ${result.fname} dan ${result.sname} :\n\n${result.percentage}%\n\nSaran: ${result.result}`
               )
             );
           })
           .catch((err) => {
-            return client.replyMessage(replyToken, Wrapper.replyText(err));
+            return client.replyMessage(
+              replyToken,
+              LineWrapper.replyText(err.message)
+            );
           });
       }
 
-      if (msgText === "katou anime quotes") {
+      if (msgText === 'katou anime quotes') {
         const quotesItem = botApi.getAnimeQuote();
+
         return client.replyMessage(
           replyToken,
-          Wrapper.replyText(
+          LineWrapper.replyText(
             `\"${quotesItem.quotesentence}\"\nBy : ${quotesItem.quotecharacter}\nFrom :  ${quotesItem.quoteanime}`
           )
         );
       }
 
-      if (msgText.includes("katou osu")) {
-        if (msgText.substr(10).trim().length === 0)
+      if (msgText.includes('katou osu')) {
+        if (msgText.substr(10).trim().length === 0) {
           return client.replyMessage(
             replyToken,
-            Wrapper.replyText("Silahkan masukan modenya")
+            LineWrapper.replyText('Silahkan masukan modenya')
           );
+        }
+
         let keyword;
         let mode;
 
-        if (msgText.includes("osustd")) {
+        if (msgText.includes('osustd')) {
           keyword = msgText.substr(13).trim();
 
-          if (keyword.length === 0)
+          if (keyword.length === 0) {
             return client.replyMessage(
               replyToken,
-              Wrapper.replyText("Silahkan masukan nickname usernya")
+              LineWrapper.replyText('Silahkan masukan nickname usernya')
             );
+          }
           mode = 0;
         }
 
-        if (msgText.includes("osumania")) {
+        if (msgText.includes('osumania')) {
           keyword = msgText.substr(15).trim();
 
-          if (keyword.length === 0)
+          if (keyword.length === 0) {
             return client.replyMessage(
               replyToken,
-              Wrapper.replyText("Silahkan masukan nickname usernya")
+              LineWrapper.replyText('Silahkan masukan nickname usernya')
             );
+          }
           mode = 3;
         }
 
-        if (msgText.includes("osutaiko")) {
+        if (msgText.includes('osutaiko')) {
           keyword = msgText.substr(15).trim();
 
-          if (keyword.length === 0)
+          if (keyword.length === 0) {
             return client.replyMessage(
               replyToken,
-              Wrapper.replyText("Silahkan masukan nickname usernya")
+              LineWrapper.replyText('Silahkan masukan nickname usernya')
             );
+          }
           mode = 1;
         }
 
-        if (msgText.includes("osuctb")) {
+        if (msgText.includes('osuctb')) {
           keyword = msgText.substr(13).trim();
 
-          if (keyword.length === 0)
+          if (keyword.length === 0) {
             return client.replyMessage(
               replyToken,
-              Wrapper.replyText("Silahkan masukan nickname usernya")
+              LineWrapper.replyText('Silahkan masukan nickname usernya')
             );
+          }
           mode = 2;
         }
 
@@ -359,35 +277,38 @@ export default class LineEventHandler {
           .then((result) => {
             return client.replyMessage(
               replyToken,
-              Wrapper.replyOsuProfile(result)
+              LineWrapper.replyOsuProfile(result)
             );
-          })
-          .catch((err) => {
-            return client.replyMessage(replyToken, Wrapper.replyText(err));
-          });
-      }
-
-      if (msgText === "bye katou") {
-        return client
-          .replyMessage(replyToken, [
-            Wrapper.replyText("Bye - Bye"),
-            Wrapper.replyImg(
-              constants.KATOULEAVEIMG_URL,
-              constants.KATOULEAVEIMG_URL
-            ),
-          ])
-          .then((result) => {
-            if (source === "room") {
-              client.leaveRoom(reqProfile.roomId);
-            } else if (source === "group") {
-              client.leaveGroup(reqProfile.groupId);
-            }
           })
           .catch((err) => {
             return client.replyMessage(
               replyToken,
-              Wrapper.replyText(
-                "ERROR tidak bisa keluar melalui keyword silahkan kick katou melalui setting group"
+              LineWrapper.replyText(err.message)
+            );
+          });
+      }
+
+      if (msgText === 'bye katou') {
+        return client
+          .replyMessage(replyToken, [
+            LineWrapper.replyText('Bye - Bye'),
+            LineWrapper.replyImg(
+              constants.KATOULEAVEIMG_URL,
+              constants.KATOULEAVEIMG_URL
+            ),
+          ])
+          .then(() => {
+            if (source === 'room') {
+              client.leaveRoom(reqProfile.roomId);
+            } else if (source === 'group') {
+              client.leaveGroup(reqProfile.groupId);
+            }
+          })
+          .catch(() => {
+            return client.replyMessage(
+              replyToken,
+              LineWrapper.replyText(
+                'ERROR tidak bisa keluar melalui keyword silahkan kick katou melalui setting group'
               )
             );
           });

@@ -1,237 +1,174 @@
-export default class Wrapper {
-  static replyText(rtext) {
+/**
+ * Line response wrapper
+ */
+export default class LineWrapper {
+  /**
+   * send text reply to line
+   * @param {string} replyText text message
+   * @return {object} text reply template
+   */
+  static replyText(replyText) {
     return {
-      type: "text",
-      text: rtext
+      type: 'text',
+      text: replyText,
     };
   }
 
+  /**
+   * send image to line
+   * @param {string} originalContent original image url
+   * @param {string} thumbnail thumbnail image url
+   * @return {object} image reply template
+   */
   static replyImg(originalContent, thumbnail) {
     return {
-      type: "image",
+      type: 'image',
       originalContentUrl: originalContent,
-      previewImageUrl: thumbnail
+      previewImageUrl: thumbnail,
     };
   }
 
+  /**
+   * send video to line
+   * @param {string} videoUrl video url
+   * @param {string} thumbnail video thumbnail url
+   * @return {object} video reply template
+   */
   static replyVideo(videoUrl, thumbnail) {
     return {
-      type: "video",
+      type: 'video',
       originalContentUrl: videoUrl,
-      previewImageUrl: thumbnail
+      previewImageUrl: thumbnail,
     };
   }
 
-  static replyButtonURLConfirm(buttonTitle, buttonLabel, url) {
-    return {
-      type: "template",
-      altText: "Download Video",
-      template: {
-        type: "buttons",
-        text: buttonTitle,
-        actions: [
-          {
-            type: "uri",
-            label: buttonLabel,
-            uri: url
-          }
-        ]
-      }
-    };
-  }
-
-  static replyInstagramProfile(instagramInfo) {
-    if (instagramInfo.tertutup === false) {
-      return {
-        type: "template",
-        altText: "Stalk",
-        template: {
-          type: "carousel",
-          columns: [
-            {
-              thumbnailImageUrl: instagramInfo.profile_pic,
-              title: instagramInfo.username,
-              text: instagramInfo.deskripsi_profil,
-              actions: [
-                {
-                  type: "uri",
-                  label: "Ke Profil",
-                  uri: instagramInfo.profile_url
-                },
-                {
-                  type: "uri",
-                  label: "Ke Post",
-                  uri: instagramInfo.code
-                },
-                {
-                  type: "uri",
-                  label: "Download Gambar Post",
-                  uri: instagramInfo.src
-                }
-              ]
-            },
-            {
-              thumbnailImageUrl: instagramInfo.src,
-              title: "Postingan Terakhir",
-              text: instagramInfo.deskripsi_post,
-              actions: [
-                {
-                  type: "uri",
-                  label: "Ke Profil",
-                  uri: instagramInfo.profile_url
-                },
-                {
-                  type: "uri",
-                  label: "Ke Post",
-                  uri: instagramInfo.code
-                },
-                {
-                  type: "uri",
-                  label: "Download Gambar Post",
-                  uri: instagramInfo.src
-                }
-              ]
-            }
-          ]
-        }
-      };
-    } else {
-      return {
-        type: "template",
-        altText: "Stalk",
-        template: {
-          type: "carousel",
-          columns: [
-            {
-              thumbnailImageUrl: instagramInfo.profile_pic,
-              title: instagramInfo.username,
-              text: instagramInfo.objUser.deskripsi_profil,
-              actions: [
-                {
-                  type: "uri",
-                  label: "Ke Profil",
-                  uri: instagramInfo.profile_url
-                }
-              ]
-            }
-          ]
-        }
-      };
-    }
-  }
-
+  /**
+   * send location to line
+   * @param {string} keyword location keyword
+   * @param {object} objLocation object of location
+   * @return {object} location reply template
+   */
   static replyLocation(keyword, objLocation) {
     return {
-      type: "location",
+      type: 'location',
       title: keyword,
       address: objLocation.formatted_address,
       latitude: objLocation.latitude,
-      longitude: objLocation.longitude
+      longitude: objLocation.longitude,
     };
   }
 
+  /**
+   * send osu stats to line
+   * @param {object} objUser user stats object
+   * @return {object} osu reply template
+   */
   static replyOsuProfile(objUser) {
     if (objUser.withBeatmap === false) {
       return {
-        type: "template",
-        altText: "Osu Profile",
+        type: 'template',
+        altText: 'Osu Profile',
         template: {
-          type: "carousel",
+          type: 'carousel',
           columns: [
             {
-              thumbnailImageUrl: "https://a.ppy.sh/" + objUser.user_id,
+              thumbnailImageUrl: 'https://a.ppy.sh/' + objUser.user_id,
               title: objUser.username,
               text: objUser.deskripsi_profil,
               actions: [
                 {
-                  type: "uri",
-                  label: "Ke profile",
-                  uri: "https://osu.ppy.sh/u/" + objUser.user_id
-                }
-              ]
-            }
-          ]
-        }
+                  type: 'uri',
+                  label: 'Ke profile',
+                  uri: 'https://osu.ppy.sh/u/' + objUser.user_id,
+                },
+              ],
+            },
+          ],
+        },
       };
     } else {
       return {
-        type: "template",
-        altText: "Osu Profile",
+        type: 'template',
+        altText: 'Osu Profile',
         template: {
-          type: "carousel",
+          type: 'carousel',
           columns: [
             {
-              thumbnailImageUrl: "https://a.ppy.sh/" + objUser.user_id,
+              thumbnailImageUrl: 'https://a.ppy.sh/' + objUser.user_id,
               title: objUser.username,
               text: objUser.deskripsi_profil,
               actions: [
                 {
-                  type: "uri",
-                  label: "Ke profile",
-                  uri: "https://osu.ppy.sh/u/" + objUser.user_id
+                  type: 'uri',
+                  label: 'Ke profile',
+                  uri: 'https://osu.ppy.sh/u/' + objUser.user_id,
                 },
                 {
-                  type: "uri",
-                  label: "Ke beatmap terbaik",
-                  uri: "https://osu.ppy.sh/s/" + objUser.beatmapset_id
-                }
-              ]
+                  type: 'uri',
+                  label: 'Ke beatmap terbaik',
+                  uri: 'https://osu.ppy.sh/s/' + objUser.beatmapset_id,
+                },
+              ],
             },
             {
               thumbnailImageUrl:
-                "https://b.ppy.sh/thumb/" + objUser.beatmapset_id + "l.jpg",
-              title: "Skor Terbaik",
+                'https://b.ppy.sh/thumb/' + objUser.beatmapset_id + 'l.jpg',
+              title: 'Skor Terbaik',
               text: objUser.deskripsi_best,
               actions: [
                 {
-                  type: "uri",
-                  label: "Ke profile",
-                  uri: "https://osu.ppy.sh/u/" + objUser.user_id
+                  type: 'uri',
+                  label: 'Ke profile',
+                  uri: 'https://osu.ppy.sh/u/' + objUser.user_id,
                 },
                 {
-                  type: "uri",
-                  label: "Ke beatmap terbaik",
-                  uri: "https://osu.ppy.sh/s/" + objUser.beatmapset_id
-                }
-              ]
-            }
-          ]
-        }
+                  type: 'uri',
+                  label: 'Ke beatmap terbaik',
+                  uri: 'https://osu.ppy.sh/s/' + objUser.beatmapset_id,
+                },
+              ],
+            },
+          ],
+        },
       };
     }
   }
 
+  /**
+   * send keywords menu to line
+   * @return {object} keywords menu template
+   */
   static replyKeyword() {
     return {
-      type: "template",
-      altText: "Keyword",
+      type: 'template',
+      altText: 'Keyword',
       template: {
-        type: "buttons",
-        title: "Keyword",
-        text: "List keyword",
+        type: 'buttons',
+        title: 'Keyword',
+        text: 'List keyword',
         actions: [
           {
-            type: "message",
-            label: "Keyword 1",
-            text: "/keyword 1"
+            type: 'message',
+            label: 'Keyword 1',
+            text: '/keyword 1',
           },
           {
-            type: "message",
-            label: "Keyword 2",
-            text: "/keyword 2"
+            type: 'message',
+            label: 'Keyword 2',
+            text: '/keyword 2',
           },
           {
-            type: "message",
-            label: "Keyword 3",
-            text: "/keyword 3"
+            type: 'message',
+            label: 'Keyword 3',
+            text: '/keyword 3',
           },
           {
-            type: "uri",
-            label: "Developer",
-            uri: "http://line.me/ti/p/~akl2340"
-          }
-        ]
-      }
+            type: 'uri',
+            label: 'Developer',
+            uri: 'http://line.me/ti/p/~akl2340',
+          },
+        ],
+      },
     };
   }
 }
