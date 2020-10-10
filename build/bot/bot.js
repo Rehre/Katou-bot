@@ -15,13 +15,13 @@ var _line = _interopRequireDefault(require("./event-handler/line"));
 var _telegram = _interopRequireDefault(require("./event-handler/telegram"));
 
 // server setup
-var app = (0, _express.default)();
+var app = (0, _express["default"])();
 app.set("PORT", process.env.PORT || 3000); // -- START LINE BOT SETUP --
 // setup the event handler for LINE
 
-var lineEventHandler = new _line.default(new _botSdk.Client(_botConfig.default.line)); // listen to the API post /webhook_line for getting the LINE response
+var lineEventHandler = new _line["default"](new _botSdk.Client(_botConfig["default"].line)); // listen to the API post /webhook_line for getting the LINE events
 
-app.post("/webhook_line", (0, _botSdk.middleware)(_botConfig.default.line), function (req, res) {
+app.post("/webhook_line", (0, _botSdk.middleware)(_botConfig["default"].line), function (req, res) {
   // wait for all the requested events to be finished then send the result;
   Promise.all(req.body.events.map(lineEventHandler.handle)).then(function (result) {
     return res.json(result);
@@ -29,11 +29,10 @@ app.post("/webhook_line", (0, _botSdk.middleware)(_botConfig.default.line), func
 }); // -- END LINE BOT SETUP --
 // -- START TELEGRAM BOT SETUP --
 
-app.post("/".concat(_botConfig.default.telegram.token), _bodyParser.default.json(), function (req, res) {
+app.post("/".concat(_botConfig["default"].telegram.token), _bodyParser["default"].json(), function (req, res) {
   res.header("Content-Type", "application/json");
-  var telegramEventHandler = new _telegram.default(res.status(200).send.bind(res));
+  var telegramEventHandler = new _telegram["default"](res.status(200).send.bind(res));
   telegramEventHandler.handle(req.body);
-  return;
 }); // -- END TELEGRAM BOT SETUP --
 // start the server
 

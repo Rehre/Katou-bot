@@ -5,20 +5,18 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
 
-var Wrapper =
-/*#__PURE__*/
-function () {
+var Wrapper = /*#__PURE__*/function () {
   function Wrapper() {
-    (0, _classCallCheck2.default)(this, Wrapper);
+    (0, _classCallCheck2["default"])(this, Wrapper);
   }
 
-  (0, _createClass2.default)(Wrapper, null, [{
+  (0, _createClass2["default"])(Wrapper, null, [{
     key: "replyText",
     value: function replyText(rtext) {
       return {
@@ -230,4 +228,4 @@ function () {
   return Wrapper;
 }();
 
-exports.default = Wrapper;
+exports["default"] = Wrapper;

@@ -1,4 +1,6 @@
 {
   "presets": ["@babel/env"],
-  "plugins": ["@babel/transform-runtime"]
+  "plugins": [
+    ["@babel/transform-runtime"] // needed to fix regeneratorRuntime issue when running the build file
+  ]
 }
