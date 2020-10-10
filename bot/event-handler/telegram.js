@@ -170,7 +170,7 @@ export default class TelegramEventHandler {
           sendBack(Wrapper.replyTextMessage(receiverChatID, err.message));
         });
     }
-    // TODO adding funciton for this
+    // TODO add calculate function for this
     if (command.includes("/calc")) {
       const keyword = this.parseKeyword(messageObject, "calc");
 

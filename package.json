@@ -12,16 +12,17 @@
     "Chat",
     "bot",
     "LINE",
+    "Telegram",
     "NodeJS",
     "Javascript"
   ],
   "author": "Akmal Maulana Azzam",
   "license": "MIT",
   "dependencies": {
-    "@babel/runtime": "^7.1.5",
-    "@line/bot-sdk": "^6.8.4",
+    "@babel/runtime": "7.11.2",
+    "@line/bot-sdk": "6.8.4",
     "animequote": "1.1.1",
-    "body-parser": "^1.18.3",
+    "body-parser": "1.18.3",
     "express": "4.16.4",
     "g-i-s": "2.1.2",
     "osu": "2.0.0",
@@ -35,6 +36,6 @@
     "@babel/node": "7.0.0",
     "@babel/plugin-transform-runtime": "7.1.0",
     "@babel/preset-env": "7.1.5",
-    "nodemon": "1.18.6"
+    "nodemon": "2.0.4"
   }
 }

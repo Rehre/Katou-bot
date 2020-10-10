@@ -8,8 +8,8 @@ import * as osu from "osu";
 import constants from "./constants";
 
 export default class BotApi {
-  constructor() {
-    this.getRandomIndex = (length) => Math.floor(Math.random() * length);
+  getRandomIndex(length) {
+    return Math.floor(Math.random() * length)
   }
 
   async getNLP(keyword) {

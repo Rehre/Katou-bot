@@ -24,7 +24,7 @@ export default class Wrapper {
     };
   }
 
-  static replyLocation(chat_id, lat, long) {
+  static replyLocation(chat_id, latitude, longitude) {
     return {
       method: "sendLocation",
       chat_id,
@@ -39,12 +39,12 @@ export default class Wrapper {
       chat_id,
       text: `OSU PROFIL
 username: ${objUser.username}
-profil_description: ${objUser.deskripsi_profil}
-url_profil: "https://osu.ppy.sh/u/${objUser.user_id}"
+profile description: ${objUser.deskripsi_profil}
+url profile: "https://osu.ppy.sh/u/${objUser.user_id}"
 
 BEST SCORE
 beatmap: ${objUser.deskripsi_best || "none"}
-url_beatmap: "https://osu.ppy.sh/s/${objUser.beatmapset_id || "none"}"
+url beatmap: "https://osu.ppy.sh/s/${objUser.beatmapset_id || "none"}"
 `
     };
   }

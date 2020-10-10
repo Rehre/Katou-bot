@@ -14,22 +14,19 @@ const app = express();
 app.set("PORT", process.env.PORT || 3000);
 
 // -- START LINE BOT SETUP --
-
 // setup the event handler for LINE
 const lineEventHandler = new LineEventHandler(new LineClient(botConfig.line));
 
-// listen to the API post /webhook_line for getting the LINE response
+// listen to the API post /webhook_line for getting the LINE events
 app.post("/webhook_line", LineMiddleware(botConfig.line), (req, res) => {
   // wait for all the requested events to be finished then send the result;
   Promise.all(req.body.events.map(lineEventHandler.handle)).then(result =>
     res.json(result)
   );
 });
-
 // -- END LINE BOT SETUP --
 
 // -- START TELEGRAM BOT SETUP --
-
 app.post(`/${botConfig.telegram.token}`, bodyParser.json(), (req, res) => {
   res.header("Content-Type", "application/json");
 
@@ -37,10 +34,7 @@ app.post(`/${botConfig.telegram.token}`, bodyParser.json(), (req, res) => {
     res.status(200).send.bind(res)
   );
   telegramEventHandler.handle(req.body);
-
-  return;
 });
-
 // -- END TELEGRAM BOT SETUP --
 
 // start the server
