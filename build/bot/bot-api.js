@@ -21,18 +21,17 @@ var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/creat
 
 var _requestPromise = _interopRequireDefault(require("request-promise"));
 
-var _gIS = _interopRequireDefault(require("g-i-s"));
-
-var _youtubeSearch = _interopRequireDefault(require("youtube-search"));
-
-var _ytdlCore = _interopRequireDefault(require("ytdl-core"));
-
 var _animequote = _interopRequireDefault(require("animequote"));
 
 var osu = _interopRequireWildcard(require("osu"));
 
 var _constants = _interopRequireDefault(require("./constants"));
 
+// TODO: add image search, video search and location search
+
+/**
+ * BotApi
+ */
 var BotApi = /*#__PURE__*/function () {
   function BotApi() {
     (0, _classCallCheck2["default"])(this, BotApi);
@@ -40,13 +39,26 @@ var BotApi = /*#__PURE__*/function () {
 
   (0, _createClass2["default"])(BotApi, [{
     key: "getRandomIndex",
-    value: function getRandomIndex(length) {
-      return Math.floor(Math.random() * length);
+
+    /**
+     * get random number between 0 to max
+     * @param {number} max the maximum random number
+     * @return {number} the random number
+     */
+    value: function getRandomIndex(max) {
+      return Math.floor(Math.random() * max);
     }
+    /**
+     * NOTE: EXPERIMENTAL FEATURE
+     * get the result of language processing in percentage from the katou-nlp-service
+     * @param {string} text text to be processed to katou-nlp-service
+     * @return {object} the processed result from the katou-nlp-service
+     */
+
   }, {
     key: "getNLP",
     value: function () {
-      var _getNLP = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(keyword) {
+      var _getNLP = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(text) {
         var response;
         return _regenerator["default"].wrap(function _callee$(_context) {
           while (1) {
@@ -54,11 +66,11 @@ var BotApi = /*#__PURE__*/function () {
               case 0:
                 _context.next = 2;
                 return (0, _requestPromise["default"])({
-                  uri: "https://katou-nlp-service.herokuapp.com/classify",
-                  method: "POST",
+                  uri: 'https://katou-nlp-service.herokuapp.com/classify',
+                  method: 'POST',
                   json: true,
                   body: {
-                    keyword: keyword
+                    keyword: text
                   }
                 });
 
@@ -70,7 +82,7 @@ var BotApi = /*#__PURE__*/function () {
                   break;
                 }
 
-                throw new Error("Error fetching: response");
+                throw new Error('Error fetching response');
 
               case 5:
                 return _context.abrupt("return", response);
@@ -89,29 +101,46 @@ var BotApi = /*#__PURE__*/function () {
 
       return getNLP;
     }()
+    /**
+     * get reply from the bot
+     * @param {string} username username to be used in the text as the name of the user
+     * @return {string} the reply from the bot
+     */
+
   }, {
     key: "sendReply",
     value: function sendReply(username) {
-      var replyString = ["Iya, " + username + " ?", "Ada apa " + username + " ?", "Ada yang bisa dibantu " + username + " ?"];
+      var replyString = ['Iya, ' + username + ' ?', 'Ada apa ' + username + ' ?', 'Ada yang bisa dibantu ' + username + ' ?'];
       return replyString[this.getRandomIndex(replyString.length)];
     }
+    /**
+     * get fortune telling randomly from the bot
+     * @return {string} tne text of the fortune
+     */
+
   }, {
     key: "getRamal",
     value: function getRamal() {
-      var ramalan = ["Berhati-hatilah hari ini adalah hari tersial mu", "Hari ini mungkin agak menyusahkan bagimu jadi berhati-hatilah", "Hari ini mungkin kamu akan menemukan jodohmu", "Hari ini mungkin akan sangat menguntungkan bagi keuanganmu", "Tiada hari yang lebih baik dari hari ini bagimu"];
+      var ramalan = ['Berhati-hatilah hari ini adalah hari tersial mu', 'Hari ini mungkin agak menyusahkan bagimu jadi berhati-hatilah', 'Hari ini mungkin kamu akan menemukan jodohmu', 'Hari ini mungkin akan sangat menguntungkan bagi keuanganmu', 'Tiada hari yang lebih baik dari hari ini bagimu'];
       return ramalan[this.getRandomIndex(ramalan.length)];
     }
+    /**
+     * get wikipedia result from the keyword
+     * @param {string} keyword wikipedia search keywod
+     * @return {string} returned text from the wikipedia
+     */
+
   }, {
     key: "getWiki",
     value: function () {
       var _getWiki = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(keyword) {
-        var keywordEncoded, response, pages, urlForText, i, extractedText;
+        var keywordEncoded, response, pages, urlForText, extractedText;
         return _regenerator["default"].wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
                 _context2.prev = 0;
-                keywordEncoded = encodeURI(keyword);
+                keywordEncoded = encodeURIComponent(keyword);
                 _context2.next = 4;
                 return (0, _requestPromise["default"])({
                   uri: _constants["default"].WIKIPEDIA_URL + keywordEncoded,
@@ -126,68 +155,55 @@ var BotApi = /*#__PURE__*/function () {
                   break;
                 }
 
-                throw new Error("Error fetching: response");
+                throw new Error('Error fetching response');
 
               case 7:
                 pages = response.query.pages;
                 urlForText = "https://id.wikipedia.org/wiki/".concat(keywordEncoded);
-                _context2.t0 = _regenerator["default"].keys(pages);
+                extractedText = Object.values(pages)[0].extract;
 
-              case 10:
-                if ((_context2.t1 = _context2.t0()).done) {
-                  _context2.next = 22;
-                  break;
-                }
-
-                i = _context2.t1.value;
-                extractedText = pages[i].extract;
-
-                if (!(extractedText === "")) {
-                  _context2.next = 15;
+                if (!(extractedText === '')) {
+                  _context2.next = 12;
                   break;
                 }
 
                 return _context2.abrupt("return", "Link dialihkan ke: ".concat(urlForText));
 
-              case 15:
+              case 12:
                 if (!(extractedText === null)) {
-                  _context2.next = 17;
+                  _context2.next = 14;
                   break;
                 }
 
                 return _context2.abrupt("return", "Tidak ditemukan hasil dengan keyword : ".concat(keyword));
 
-              case 17:
+              case 14:
                 if (!(extractedText !== null)) {
-                  _context2.next = 20;
+                  _context2.next = 17;
                   break;
                 }
 
                 if (extractedText.length > 1900) {
-                  extractedText = extractedText.substr(0, 1900) + "...";
+                  extractedText = extractedText.substr(0, 1900) + '...';
                 }
 
                 return _context2.abrupt("return", "".concat(extractedText, "\nRead more: ").concat(urlForText));
 
-              case 20:
-                _context2.next = 10;
+              case 17:
+                _context2.next = 22;
                 break;
+
+              case 19:
+                _context2.prev = 19;
+                _context2.t0 = _context2["catch"](0);
+                throw new Error("Request gagal atau halaman wikipedia tidak ditemukan");
 
               case 22:
-                _context2.next = 27;
-                break;
-
-              case 24:
-                _context2.prev = 24;
-                _context2.t2 = _context2["catch"](0);
-                throw new Error("Request gagal atau halaman wikipedia tidak ditemukan ERR: ".concat(_context2.t2));
-
-              case 27:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, null, [[0, 24]]);
+        }, _callee2, null, [[0, 19]]);
       }));
 
       function getWiki(_x2) {
@@ -195,25 +211,13 @@ var BotApi = /*#__PURE__*/function () {
       }
 
       return getWiki;
-    }() // TODO: library doesn't work anymore fix this later
+    }()
+    /**
+     * get weather data from location
+     * @param {string} keyword the location of the weather
+     * @return {string} weather data of the location
+     */
 
-  }, {
-    key: "getImageUrl",
-    value: function getImageUrl(keyword) {
-      var _this = this;
-
-      return new Promise(function (resolve, reject) {
-        (0, _gIS["default"])({
-          searchTerm: keyword,
-          queryStringAddition: "&safe=active&tbs=isz:m"
-        }, function (err, result) {
-          console.log(err, result);
-          if (err) reject("Gambar ".concat(keyword, " tidak ditemukan"));
-          result === undefined ? reject("Gambar ".concat(keyword, " tidak ditemukan")) : null;
-          result[_this.getRandomIndex(result.length)] === undefined ? reject("Gambar ".concat(keyword, " tidak ditemukan")) : resolve(result[_this.getRandomIndex(result.length)].url);
-        });
-      });
-    }
   }, {
     key: "getWeather",
     value: function () {
@@ -238,7 +242,7 @@ var BotApi = /*#__PURE__*/function () {
                   break;
                 }
 
-                throw new Error("Error fetching: response");
+                throw new Error('Error fetching response');
 
               case 6:
                 resultData = {
@@ -253,7 +257,7 @@ var BotApi = /*#__PURE__*/function () {
               case 10:
                 _context3.prev = 10;
                 _context3.t0 = _context3["catch"](0);
-                throw new Error("Request gagal atau kota tidak ditemukan ERR: ".concat(_context3.t0));
+                throw new Error("Request gagal atau kota tidak ditemukan");
 
               case 13:
               case "end":
@@ -269,48 +273,13 @@ var BotApi = /*#__PURE__*/function () {
 
       return getWeather;
     }()
-  }, {
-    key: "getVideo",
-    value: function getVideo(keyword) {
-      return new Promise(function (resolve, reject) {
-        (0, _youtubeSearch["default"])(keyword, {
-          maxResults: 5,
-          order: "relevance",
-          type: "video",
-          safeSearch: "strict",
-          key: _constants["default"].GOOGLECLOUDAPI_KEY
-        }, function (err, result) {
-          if (err || result == undefined || result == [] || result.length <= 0) {
-            reject("Video tidak ditemukan atau LIMIT");
-          } else {
-            var randomIndex = Math.round(Math.random() * result.length);
-            var resultVideo = {
-              link: result[randomIndex].link,
-              title: result[randomIndex].title,
-              thumbnail: result[randomIndex].thumbnails["default"].url
-            };
+    /**
+     * translate text
+     * @param {string} text text to translate
+     * @param {string} lang language code
+     * @return {string} the translated text
+     */
 
-            _ytdlCore["default"].getInfo(resultVideo.link, {}, function (err, info) {
-              if (err) {
-                resultVideo.videoUrl = "undefined";
-                resolve(resultVideo);
-              } else if (info == undefined) {
-                resultVideo.videoUrl = "undefined";
-                resolve(resultVideo);
-              } else {
-                for (var i = 0; i < info.formats.length; i++) {
-                  if (info.formats[i].container === "mp4") {
-                    resultVideo.videoUrl = info.formats[i].url;
-                    resolve(resultVideo);
-                    break;
-                  }
-                }
-              }
-            });
-          }
-        });
-      });
-    }
   }, {
     key: "translateText",
     value: function () {
@@ -334,7 +303,7 @@ var BotApi = /*#__PURE__*/function () {
                   break;
                 }
 
-                throw new Error("Error fetching: response");
+                throw new Error('Error fetching response');
 
               case 6:
                 return _context4.abrupt("return", "".concat(JSON.parse(response).text));
@@ -342,7 +311,7 @@ var BotApi = /*#__PURE__*/function () {
               case 9:
                 _context4.prev = 9;
                 _context4.t0 = _context4["catch"](0);
-                throw new Error("Request gagal atau kode bahasa tidak ditemukan ERR: ".concat(_context4.t0));
+                throw new Error("Request gagal atau kode bahasa tidak ditemukan");
 
               case 12:
               case "end":
@@ -358,159 +327,85 @@ var BotApi = /*#__PURE__*/function () {
 
       return translateText;
     }()
+    /**
+     * get lovemeter of couple from the api
+     * @param {string} keyword keyword that has couple names (person1:person2)
+     * @return {object} the percentage result object
+     */
+
   }, {
-    key: "getLocation",
+    key: "getLoveMeter",
     value: function () {
-      var _getLocation = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(keyword) {
-        var encodedKeyword, response, formatted_address, latitude, longitude;
+      var _getLoveMeter = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(keyword) {
+        var couple, person1, person2, response;
         return _regenerator["default"].wrap(function _callee5$(_context5) {
           while (1) {
             switch (_context5.prev = _context5.next) {
               case 0:
                 _context5.prev = 0;
-                encodedKeyword = encodeURI(keyword);
-                _context5.next = 4;
-                return (0, _requestPromise["default"])({
-                  uri: "".concat(_constants["default"].GMAPSJS_URL).concat(encodedKeyword).concat(_constants["default"].GMAPSJS_QUERY).concat(_constants["default"].GMAPSJS_KEY),
-                  json: true
-                });
-
-              case 4:
-                response = _context5.sent;
-
-                if (response) {
-                  _context5.next = 7;
-                  break;
-                }
-
-                throw new Error("Error Fetching: response");
-
-              case 7:
-                if (response.result) {
-                  _context5.next = 9;
-                  break;
-                }
-
-                throw new Error("Error Fetching: result");
-
-              case 9:
-                formatted_address = response.results[0].formatted_address;
-                latitude = response.results[0].geometry.location.lat;
-                longitude = response.results[0].geometry.location.lng;
-
-                if (formatted_address.length > 100) {
-                  formatted_address = ((0, _readOnlyError2["default"])("formatted_address"), formatted_address.substr(0, 90) + "...");
-                }
-
-                return _context5.abrupt("return", {
-                  formatted_address: formatted_address,
-                  latitude: latitude,
-                  longitude: longitude
-                });
-
-              case 16:
-                _context5.prev = 16;
-                _context5.t0 = _context5["catch"](0);
-                throw new Error("Request gagal atau tidak dapat menemukan lokasi ERR: ".concat(_context5.t0));
-
-              case 19:
-              case "end":
-                return _context5.stop();
-            }
-          }
-        }, _callee5, null, [[0, 16]]);
-      }));
-
-      function getLocation(_x6) {
-        return _getLocation.apply(this, arguments);
-      }
-
-      return getLocation;
-    }()
-  }, {
-    key: "getYoutubeUrl",
-    value: function getYoutubeUrl(keyword) {
-      return new Promise(function (resolve, reject) {
-        (0, _youtubeSearch["default"])(keyword, {
-          maxResults: 5,
-          order: "relevance",
-          type: "video",
-          safeSearch: "strict",
-          key: _constants["default"].GOOGLECLOUDAPI_KEY
-        }, function (err, result) {
-          if (err || result == undefined || result == [] || result.length <= 0) {
-            reject("Video tidak ditemukan atau LIMIT");
-          } else {
-            var resultVideo = {
-              link: result[0].link,
-              title: result[0].title
-            };
-            resolve(resultVideo);
-          }
-        });
-      });
-    }
-  }, {
-    key: "getLoveMeter",
-    value: function () {
-      var _getLoveMeter = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee6(keyword) {
-        var couple, person1, person2, response;
-        return _regenerator["default"].wrap(function _callee6$(_context6) {
-          while (1) {
-            switch (_context6.prev = _context6.next) {
-              case 0:
-                _context6.prev = 0;
-                couple = keyword.split(":");
+                couple = keyword.split(':');
                 person1 = couple[0];
                 person2 = couple[1];
-                _context6.next = 6;
+                _context5.next = 6;
                 return (0, _requestPromise["default"])({
                   uri: "".concat(_constants["default"].RAPID_API_LOVEMETERURL).concat(person1).concat(_constants["default"].RAPID_API_LOVEMETERQUERY).concat(person2),
                   json: true,
                   headers: {
-                    "x-rapidapi-host": _constants["default"].RAPID_API_LOVEMETER_HOST,
-                    "x-rapidapi-key": _constants["default"].RAPID_API_KEY,
-                    Accept: "application/json"
+                    'x-rapidapi-host': _constants["default"].RAPID_API_LOVEMETER_HOST,
+                    'x-rapidapi-key': _constants["default"].RAPID_API_KEY,
+                    Accept: 'application/json'
                   }
                 });
 
               case 6:
-                response = _context6.sent;
+                response = _context5.sent;
 
                 if (response) {
-                  _context6.next = 9;
+                  _context5.next = 9;
                   break;
                 }
 
-                throw new Error("Error fetching: response");
+                throw new Error('Error fetching response');
 
               case 9:
-                return _context6.abrupt("return", response);
+                return _context5.abrupt("return", response);
 
               case 12:
-                _context6.prev = 12;
-                _context6.t0 = _context6["catch"](0);
-                throw new Error("Request gagal atau tidak dapat menghitung persentase pasangan ERR: ".concat(_context6.t0));
+                _context5.prev = 12;
+                _context5.t0 = _context5["catch"](0);
+                throw new Error("Request gagal atau tidak dapat menghitung persentase pasangan");
 
               case 15:
               case "end":
-                return _context6.stop();
+                return _context5.stop();
             }
           }
-        }, _callee6, null, [[0, 12]]);
+        }, _callee5, null, [[0, 12]]);
       }));
 
-      function getLoveMeter(_x7) {
+      function getLoveMeter(_x6) {
         return _getLoveMeter.apply(this, arguments);
       }
 
       return getLoveMeter;
     }()
+    /**
+     * get anime quote from the animequote library
+     * @return {string} the quote string
+     */
+
   }, {
     key: "getAnimeQuote",
     value: function getAnimeQuote() {
       return (0, _animequote["default"])();
     }
+    /**
+     * get osu player info
+     * @param {string} keyword the player username
+     * @param {string} mode the mode stats for the player
+     * @return {object} object of the player stats
+     */
+
   }, {
     key: "getOsuProfile",
     value: function getOsuProfile(keyword, mode) {
@@ -518,8 +413,8 @@ var BotApi = /*#__PURE__*/function () {
         var osuApi = osu.api(_constants["default"].OSUAPI_KEY);
         var resultProfile;
         var resultBest;
-        var deskripsi_profil;
-        var deskripsi_best;
+        var deskripsiProfil;
+        var deskripsiBest;
         osuApi.getUser({
           u: keyword,
           m: mode
@@ -532,14 +427,14 @@ var BotApi = /*#__PURE__*/function () {
           });
         }).then(function (resultBests) {
           resultBest = resultBests;
-          deskripsi_profil = "Level : " + Math.floor(parseInt(resultProfile[0].level)) + "    Acc : " + Math.floor(parseInt(resultProfile[0].accuracy)) + "%\nRank : " + resultProfile[0].pp_rank + "\nPP :" + resultProfile[0].pp_raw;
+          deskripsiProfil = 'Level : ' + Math.floor(parseInt(resultProfile[0].level)) + '    Acc : ' + Math.floor(parseInt(resultProfile[0].accuracy)) + '%\nRank : ' + resultProfile[0].pp_rank + '\nPP :' + resultProfile[0].pp_raw;
 
           if (resultBest[0].length === 0) {
             resolve({
               withBeatmap: false,
               userId: resultProfile[0].user_id,
               username: resultProfile[0].username,
-              deskripsi_profil: deskripsi_profil
+              deskripsi_profil: deskripsiProfil
             });
           }
 
@@ -551,32 +446,25 @@ var BotApi = /*#__PURE__*/function () {
           var beatmapTitle = resultBeatmap[0].title;
 
           if (beatmapTitle.length > 26) {
-            beatmapTitle = ((0, _readOnlyError2["default"])("beatmapTitle"), beatmapTitle.substr(0, 26) + "...");
+            beatmapTitle = ((0, _readOnlyError2["default"])("beatmapTitle"), beatmapTitle.substr(0, 26) + '...');
           }
 
-          deskripsi_best = beatmapTitle + "\nScore : " + resultBest[0].score + "\nPP : " + Math.floor(parseInt(resultBest[0].pp));
+          deskripsiBest = beatmapTitle + '\nScore : ' + resultBest[0].score + '\nPP : ' + Math.floor(parseInt(resultBest[0].pp));
           resolve({
             withBeatmap: true,
             user_id: resultProfile[0].user_id,
             username: resultProfile[0].username,
             deskripsi_profil: deskripsi_profil,
             beatmapset_id: resultBeatmap[0].beatmapset_id,
-            deskripsi_best: deskripsi_best
+            deskripsi_best: deskripsiBest
           });
-        })["catch"](function (err) {
-          reject("Request gagal atau tidak dapat menemukan user osu!");
+        })["catch"](function () {
+          reject(Error('Request gagal atau tidak dapat menemukan user osu'));
         });
       });
     }
   }]);
   return BotApi;
-}(); // for development
-
+}();
 
 exports["default"] = BotApi;
-var botApi = new BotApi(); // console.log(
-//   botApi
-//     .translateText("hey you", "en-id")
-//     .then((result) => console.log(result))
-//     .catch((err) => console.log(err))
-// );
