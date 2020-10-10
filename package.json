@@ -15,7 +15,7 @@
   },
   "lint-staged": {
     "./bot/*.js": [
-      "eslint --cache --fix",
+      "eslint --fix",
       "prettier --write"
     ]
   },
@@ -47,6 +47,7 @@
     "@babel/node": "7.10.5",
     "@babel/plugin-transform-runtime": "7.11.5",
     "@babel/preset-env": "7.11.5",
+    "babel-eslint": "10.1.0",
     "eslint": "7.11.0",
     "eslint-config-google": "0.14.0",
     "eslint-config-prettier": "6.12.0",
