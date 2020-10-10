@@ -58,7 +58,7 @@ var LineEventHandler = /*#__PURE__*/function () {
         if (event.message.type !== 'text') return Promise.resolve(null);
         var msgText = event.message.text.toLowerCase();
 
-        if (!msgText.split('')[0].trim() !== 'katou') {
+        if (msgText.split(' ')[0].trim() !== 'katou') {
           return Promise.resolve(null);
         }
 

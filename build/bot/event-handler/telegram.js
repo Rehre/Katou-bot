@@ -62,7 +62,7 @@ var TelegramEventHandler = /*#__PURE__*/function () {
 
       var botApi = this.botApi;
       var messageObject = event.message;
-      var command = event.message.text.split('')[0].trim();
+      var command = event.message.text.split(' ')[0].trim();
       var receiverChatID = event.message.chat.id;
 
       if (!command) {

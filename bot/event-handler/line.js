@@ -47,7 +47,7 @@ export default class LineEventHandler {
 
       const msgText = event.message.text.toLowerCase();
 
-      if (!msgText.split('')[0].trim() !== 'katou') {
+      if (msgText.split(' ')[0].trim() !== 'katou') {
         return Promise.resolve(null);
       }
 
