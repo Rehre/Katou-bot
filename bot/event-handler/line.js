@@ -126,35 +126,6 @@ export default class LineEventHandler {
           });
       }
 
-      if (msgText.includes('katou terjemahkan')) {
-        const text = msgText.substr(24).trim();
-        const lang = msgText.slice(18, 24).trim();
-
-        if (lang.length <= 0 || text.length <= 0) {
-          return client.replyMessage(
-            replyToken,
-            LineWrapper.replyText(
-              'Silahkan masukan kode bahasa dan teks yang ingin diterjemahkan'
-            )
-          );
-        }
-
-        botApi
-          .translateText(text, lang.replace(':', '-'))
-          .then((result) => {
-            return client.replyMessage(
-              replyToken,
-              LineWrapper.replyText(result)
-            );
-          })
-          .catch((err) => {
-            return client.replyMessage(
-              replyToken,
-              LineWrapper.replyText(err.message)
-            );
-          });
-      }
-
       if (msgText.includes('katou tulis')) {
         let keyword = msgText.substr(12);
 
@@ -174,41 +145,13 @@ export default class LineEventHandler {
         );
       }
 
-      if (msgText.includes('katou lovemeter')) {
-        const keyword = msgText.substr(16).trim();
-
-        if (keyword.length <= 0) {
-          return client.replyMessage(
-            replyToken,
-            LineWrapper.replyText('Silahkan masukan nama pasangannya')
-          );
-        }
-
-        botApi
-          .getLoveMeter(msgText)
-          .then((result) => {
-            return client.replyMessage(
-              replyToken,
-              LineWrapper.replyText(
-                `Persentase pasangan ${result.fname} dan ${result.sname} :\n\n${result.percentage}%\n\nSaran: ${result.result}`
-              )
-            );
-          })
-          .catch((err) => {
-            return client.replyMessage(
-              replyToken,
-              LineWrapper.replyText(err.message)
-            );
-          });
-      }
-
       if (msgText === 'katou anime quotes') {
         const quotesItem = botApi.getAnimeQuote();
 
         return client.replyMessage(
           replyToken,
           LineWrapper.replyText(
-            `\"${quotesItem.quotesentence}\"\nBy : ${quotesItem.quotecharacter}\nFrom :  ${quotesItem.quoteanime}`
+            `"${quotesItem.quotesentence}"\nBy : ${quotesItem.quotecharacter}\nFrom :  ${quotesItem.quoteanime}`
           )
         );
       }

@@ -28,7 +28,7 @@ var TelegramEventHandler = /*#__PURE__*/function () {
     (0, _classCallCheck2["default"])(this, TelegramEventHandler);
     this.sendBack = sendBackFunc;
     this.botApi = new _botApi["default"]();
-    this.commandList = ['/ai', '/katou', '/help', '/ramal', '/say', '/wiki', '/hbd', '/weather', '/write', '/animequote', '/lovemeter', '/translate', '/osu'];
+    this.commandList = ['/ai', '/katou', '/help', '/ramal', '/say', '/wiki', '/hbd', '/weather', '/write', '/animequote', '/osu'];
   }
   /**
    * function to format the telegram keyword message
@@ -41,6 +41,7 @@ var TelegramEventHandler = /*#__PURE__*/function () {
   (0, _createClass2["default"])(TelegramEventHandler, [{
     key: "parseKeyword",
     value: function parseKeyword(messageObject, keyword) {
+      // eslint-disable-next-line no-useless-escape
       var regex = "(/".concat(keyword, "@KatouBot)|(/").concat(keyword, ")");
       return messageObject.text.replace(new RegExp(regex, 'g'), '');
     }
@@ -166,53 +167,19 @@ var TelegramEventHandler = /*#__PURE__*/function () {
         this.sendBack(_telegram["default"].replyTextMessage(receiverChatID, "\"".concat(quotesItem.quotesentence, "\"\nBy : ").concat(quotesItem.quotecharacter, "\nFrom :  ").concat(quotesItem.quoteanime)));
       }
 
-      if (command.includes('/lovemeter')) {
-        var _keyword6 = this.parseKeyword(messageObject, 'lovemeter').trim();
+      if (command.includes('/osu')) {
+        var _keyword6 = this.parseKeyword(messageObject, 'osu').trim();
 
         if (!_keyword6) {
-          this.sendBack(_telegram["default"].replyTextMessage(receiverChatID, 'Tolong masukan keyword seperti ini: /lovemeter name:name'));
-          return;
-        }
-
-        botApi.getLoveMeter(_keyword6).then(function (result) {
-          _this.sendBack(_telegram["default"].replyTextMessage(receiverChatID, "Persentase pasangan ".concat(result.fname, " dan ").concat(result.sname, " :\n\n").concat(result.percentage, "%\n\nSaran: ").concat(result.result)));
-        })["catch"](function (err) {
-          _this.sendBack(_telegram["default"].replyTextMessage(receiverChatID, err.message));
-        });
-      }
-
-      if (command.includes('/translate')) {
-        var _keyword7 = this.parseKeyword(messageObject, 'translate').trim();
-
-        if (!_keyword7) {
-          this.sendBack(_telegram["default"].replyTextMessage(receiverChatID, 'Tolong masukan keyword seperti: /translate kode-bahasa-dari:kode-bahasa-ke text'));
-          return;
-        }
-
-        var keywordArray = _keyword7.split(' ');
-
-        var lang = keywordArray[0];
-        var text = keywordArray[1];
-        botApi.translateText(text, lang.replace(':', '-')).then(function (result) {
-          _this.sendBack(_telegram["default"].replyTextMessage(receiverChatID, result));
-        })["catch"](function (err) {
-          _this.sendBack(_telegram["default"].replyTextMessage(receiverChatID, err.message));
-        });
-      }
-
-      if (command.includes('/osu')) {
-        var _keyword8 = this.parseKeyword(messageObject, 'osu').trim();
-
-        if (!_keyword8) {
           this.sendBack(_telegram["default"].replyTextMessage(receiverChatID, 'Tolong masukan keyword seperti: /osu osustd|osumania|osutaiko|osuctb user'));
           return;
         }
 
         var mode = 0;
 
-        var modeKeyword = _keyword8.split(' ')[0];
+        var modeKeyword = _keyword6.split(' ')[0];
 
-        var user = _keyword8.split(' ')[1];
+        var user = _keyword6.split(' ')[1];
 
         if (!user) {
           this.sendBack(_telegram["default"].replyTextMessage(receiverChatID, 'Tolong masukan nickname usernya'));

@@ -103,21 +103,6 @@ var LineEventHandler = /*#__PURE__*/function () {
           });
         }
 
-        if (msgText.includes('katou terjemahkan')) {
-          var text = msgText.substr(24).trim();
-          var lang = msgText.slice(18, 24).trim();
-
-          if (lang.length <= 0 || text.length <= 0) {
-            return client.replyMessage(replyToken, _line["default"].replyText('Silahkan masukan kode bahasa dan teks yang ingin diterjemahkan'));
-          }
-
-          botApi.translateText(text, lang.replace(':', '-')).then(function (result) {
-            return client.replyMessage(replyToken, _line["default"].replyText(result));
-          })["catch"](function (err) {
-            return client.replyMessage(replyToken, _line["default"].replyText(err.message));
-          });
-        }
-
         if (msgText.includes('katou tulis')) {
           var _keyword3 = msgText.substr(12);
 
@@ -130,20 +115,6 @@ var LineEventHandler = /*#__PURE__*/function () {
           return client.replyMessage(replyToken, _line["default"].replyImg(imgUrl, imgUrl));
         }
 
-        if (msgText.includes('katou lovemeter')) {
-          var _keyword4 = msgText.substr(16).trim();
-
-          if (_keyword4.length <= 0) {
-            return client.replyMessage(replyToken, _line["default"].replyText('Silahkan masukan nama pasangannya'));
-          }
-
-          botApi.getLoveMeter(msgText).then(function (result) {
-            return client.replyMessage(replyToken, _line["default"].replyText("Persentase pasangan ".concat(result.fname, " dan ").concat(result.sname, " :\n\n").concat(result.percentage, "%\n\nSaran: ").concat(result.result)));
-          })["catch"](function (err) {
-            return client.replyMessage(replyToken, _line["default"].replyText(err.message));
-          });
-        }
-
         if (msgText === 'katou anime quotes') {
           var quotesItem = botApi.getAnimeQuote();
           return client.replyMessage(replyToken, _line["default"].replyText("\"".concat(quotesItem.quotesentence, "\"\nBy : ").concat(quotesItem.quotecharacter, "\nFrom :  ").concat(quotesItem.quoteanime)));
@@ -154,14 +125,14 @@ var LineEventHandler = /*#__PURE__*/function () {
             return client.replyMessage(replyToken, _line["default"].replyText('Silahkan masukan modenya'));
           }
 
-          var _keyword5;
+          var _keyword4;
 
           var mode;
 
           if (msgText.includes('osustd')) {
-            _keyword5 = msgText.substr(13).trim();
+            _keyword4 = msgText.substr(13).trim();
 
-            if (_keyword5.length === 0) {
+            if (_keyword4.length === 0) {
               return client.replyMessage(replyToken, _line["default"].replyText('Silahkan masukan nickname usernya'));
             }
 
@@ -169,9 +140,9 @@ var LineEventHandler = /*#__PURE__*/function () {
           }
 
           if (msgText.includes('osumania')) {
-            _keyword5 = msgText.substr(15).trim();
+            _keyword4 = msgText.substr(15).trim();
 
-            if (_keyword5.length === 0) {
+            if (_keyword4.length === 0) {
               return client.replyMessage(replyToken, _line["default"].replyText('Silahkan masukan nickname usernya'));
             }
 
@@ -179,9 +150,9 @@ var LineEventHandler = /*#__PURE__*/function () {
           }
 
           if (msgText.includes('osutaiko')) {
-            _keyword5 = msgText.substr(15).trim();
+            _keyword4 = msgText.substr(15).trim();
 
-            if (_keyword5.length === 0) {
+            if (_keyword4.length === 0) {
               return client.replyMessage(replyToken, _line["default"].replyText('Silahkan masukan nickname usernya'));
             }
 
@@ -189,16 +160,16 @@ var LineEventHandler = /*#__PURE__*/function () {
           }
 
           if (msgText.includes('osuctb')) {
-            _keyword5 = msgText.substr(13).trim();
+            _keyword4 = msgText.substr(13).trim();
 
-            if (_keyword5.length === 0) {
+            if (_keyword4.length === 0) {
               return client.replyMessage(replyToken, _line["default"].replyText('Silahkan masukan nickname usernya'));
             }
 
             mode = 2;
           }
 
-          botApi.getOsuProfile(_keyword5, mode).then(function (result) {
+          botApi.getOsuProfile(_keyword4, mode).then(function (result) {
             return client.replyMessage(replyToken, _line["default"].replyOsuProfile(result));
           })["catch"](function (err) {
             return client.replyMessage(replyToken, _line["default"].replyText(err.message));

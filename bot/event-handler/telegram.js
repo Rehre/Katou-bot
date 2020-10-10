@@ -23,8 +23,6 @@ export default class TelegramEventHandler {
       '/weather',
       '/write',
       '/animequote',
-      '/lovemeter',
-      '/translate',
       '/osu',
     ];
   }
@@ -36,6 +34,7 @@ export default class TelegramEventHandler {
    * @return {string} a formatted keyword text
    */
   parseKeyword(messageObject, keyword) {
+    // eslint-disable-next-line no-useless-escape
     const regex = `(\/${keyword}@KatouBot)|(\/${keyword})`;
 
     return messageObject.text.replace(new RegExp(regex, 'g'), '');
@@ -231,72 +230,9 @@ export default class TelegramEventHandler {
       this.sendBack(
         TelegramWrapper.replyTextMessage(
           receiverChatID,
-          `\"${quotesItem.quotesentence}\"\nBy : ${quotesItem.quotecharacter}\nFrom :  ${quotesItem.quoteanime}`
+          `"${quotesItem.quotesentence}"\nBy : ${quotesItem.quotecharacter}\nFrom :  ${quotesItem.quoteanime}`
         )
       );
-    }
-
-    if (command.includes('/lovemeter')) {
-      const keyword = this.parseKeyword(messageObject, 'lovemeter').trim();
-
-      if (!keyword) {
-        this.sendBack(
-          TelegramWrapper.replyTextMessage(
-            receiverChatID,
-            'Tolong masukan keyword seperti ini: /lovemeter name:name'
-          )
-        );
-
-        return;
-      }
-
-      botApi
-        .getLoveMeter(keyword)
-        .then((result) => {
-          this.sendBack(
-            TelegramWrapper.replyTextMessage(
-              receiverChatID,
-              `Persentase pasangan ${result.fname} dan ${result.sname} :\n\n${result.percentage}%\n\nSaran: ${result.result}`
-            )
-          );
-        })
-        .catch((err) => {
-          this.sendBack(
-            TelegramWrapper.replyTextMessage(receiverChatID, err.message)
-          );
-        });
-    }
-
-    if (command.includes('/translate')) {
-      const keyword = this.parseKeyword(messageObject, 'translate').trim();
-
-      if (!keyword) {
-        this.sendBack(
-          TelegramWrapper.replyTextMessage(
-            receiverChatID,
-            'Tolong masukan keyword seperti: /translate kode-bahasa-dari:kode-bahasa-ke text'
-          )
-        );
-
-        return;
-      }
-
-      const keywordArray = keyword.split(' ');
-      const lang = keywordArray[0];
-      const text = keywordArray[1];
-
-      botApi
-        .translateText(text, lang.replace(':', '-'))
-        .then((result) => {
-          this.sendBack(
-            TelegramWrapper.replyTextMessage(receiverChatID, result)
-          );
-        })
-        .catch((err) => {
-          this.sendBack(
-            TelegramWrapper.replyTextMessage(receiverChatID, err.message)
-          );
-        });
     }
 
     if (command.includes('/osu')) {

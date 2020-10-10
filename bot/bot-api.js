@@ -1,4 +1,4 @@
-import rp from 'request-promise';
+import fetch from 'node-fetch';
 import animequote from 'animequote';
 import * as osu from 'osu';
 
@@ -25,17 +25,30 @@ export default class BotApi {
    * @return {object} the processed result from the katou-nlp-service
    */
   async getNLP(text) {
-    const response = await rp({
-      uri: 'https://katou-nlp-service.herokuapp.com/classify',
-      method: 'POST',
-      json: true,
-      body: {
-        keyword: text,
-      },
-    });
+    try {
+      const response = await fetch(
+        'https://katou-nlp-service.herokuapp.com/classify',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            keyword: text,
+          }),
+        }
+      );
+      if (!response.ok) {
+        const message = `An error has occured: ${response.status}`;
+        throw new Error(message);
+      }
 
-    if (!response) throw new Error('Error fetching response');
-    return response;
+      const result = await response.json();
+
+      return result;
+    } catch {
+      throw new Error('Error fetching response');
+    }
   }
 
   /**
@@ -78,13 +91,17 @@ export default class BotApi {
     try {
       const keywordEncoded = encodeURIComponent(keyword);
 
-      const response = await rp({
-        uri: constants.WIKIPEDIA_URL + keywordEncoded,
-        json: true,
-      });
+      const response = await fetch(
+        `${constants.WIKIPEDIA_URL}${keywordEncoded}`
+      );
+      if (!response.ok) {
+        const message = `An error has occured: ${response.status}`;
+        throw new Error(message);
+      }
 
-      if (!response) throw new Error('Error fetching response');
-      const pages = response.query.pages;
+      const result = await response.json();
+
+      const pages = result.query.pages;
       const urlForText = `https://id.wikipedia.org/wiki/${keywordEncoded}`;
 
       let extractedText = Object.values(pages)[0].extract;
@@ -116,74 +133,27 @@ export default class BotApi {
    */
   async getWeather(keyword) {
     try {
-      const response = await rp({
-        uri: `${constants.OPENWEATHERMAP_URL}${keyword}${constants.OPENWEATHERMAP_QUERY}${constants.OPENWEATHERMAP_APPID}`,
-        json: true,
-      });
+      const response = await fetch(
+        `${constants.OPENWEATHERMAP_URL}${keyword}${constants.OPENWEATHERMAP_QUERY}${constants.OPENWEATHERMAP_APPID}`
+      );
+      if (!response.ok) {
+        const message = `An error has occured: ${response.status}`;
+        throw new Error(message);
+      }
 
-      if (!response) throw new Error('Error fetching response');
+      const result = await response.json();
 
       const resultData = {
-        cityName: response.name,
-        degree: `${response.main.temp} C`,
-        humidity: `${response.main.humidity}%`,
-        pressure: `${response.main.pressure} HPa`,
-        windSpeed: `${response.wind.speed} m/s`,
+        cityName: result.name,
+        degree: `${result.main.temp} C`,
+        humidity: `${result.main.humidity}%`,
+        pressure: `${result.main.pressure} HPa`,
+        windSpeed: `${result.wind.speed} m/s`,
       };
 
       return `Cuaca di kota ${resultData.cityName} : \nSuhu : ${resultData.degree} \nKelembaban : ${resultData.humidity} \nTekanan Udara : ${resultData.pressure}\nKecepatan Angin : ${resultData.windSpeed} `;
     } catch {
       throw new Error(`Request gagal atau kota tidak ditemukan`);
-    }
-  }
-
-  /**
-   * translate text
-   * @param {string} text text to translate
-   * @param {string} lang language code
-   * @return {string} the translated text
-   */
-  async translateText(text, lang) {
-    try {
-      const response = await rp({
-        uri: `${constants.YANDEXTRANSLATE_URL}${constants.YANDEXTRANSLATE_KEY}${constants.YANDEXTEXT_QUERY}${text}${constants.YANDEXLANG_QUERY}${lang}${constants.YANDEX_OTHERQUERY}`,
-      });
-
-      if (!response) throw new Error('Error fetching response');
-      return `${JSON.parse(response).text}`;
-    } catch {
-      throw new Error(`Request gagal atau kode bahasa tidak ditemukan`);
-    }
-  }
-
-  /**
-   * get lovemeter of couple from the api
-   * @param {string} keyword keyword that has couple names (person1:person2)
-   * @return {object} the percentage result object
-   */
-  async getLoveMeter(keyword) {
-    try {
-      const couple = keyword.split(':');
-      const person1 = couple[0];
-      const person2 = couple[1];
-
-      const response = await rp({
-        uri: `${constants.RAPID_API_LOVEMETERURL}${person1}${constants.RAPID_API_LOVEMETERQUERY}${person2}`,
-        json: true,
-        headers: {
-          'x-rapidapi-host': constants.RAPID_API_LOVEMETER_HOST,
-          'x-rapidapi-key': constants.RAPID_API_KEY,
-          Accept: 'application/json',
-        },
-      });
-
-      if (!response) throw new Error('Error fetching response');
-
-      return response;
-    } catch {
-      throw new Error(
-        `Request gagal atau tidak dapat menghitung persentase pasangan`
-      );
     }
   }
 
@@ -242,7 +212,7 @@ export default class BotApi {
           return osuApi.getBeatmaps({ b: resultBest[0].beatmap_id, limit: 1 });
         })
         .then((resultBeatmap) => {
-          const beatmapTitle = resultBeatmap[0].title;
+          let beatmapTitle = resultBeatmap[0].title;
 
           if (beatmapTitle.length > 26) {
             beatmapTitle = beatmapTitle.substr(0, 26) + '...';
@@ -259,7 +229,7 @@ export default class BotApi {
             withBeatmap: true,
             user_id: resultProfile[0].user_id,
             username: resultProfile[0].username,
-            deskripsi_profil,
+            deskripsi_profil: deskripsiProfil,
             beatmapset_id: resultBeatmap[0].beatmapset_id,
             deskripsi_best: deskripsiBest,
           });
