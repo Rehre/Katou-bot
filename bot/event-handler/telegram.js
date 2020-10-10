@@ -52,7 +52,7 @@ export default class TelegramEventHandler {
 
     const botApi = this.botApi;
     const messageObject = event.message;
-    const command = event.message.text.split('')[0].trim();
+    const command = event.message.text.split(' ')[0].trim();
     const receiverChatID = event.message.chat.id;
 
     if (!command) {
