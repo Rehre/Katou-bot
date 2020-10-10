@@ -158,11 +158,6 @@ export default class LineWrapper {
             text: '/keyword 2',
           },
           {
-            type: 'message',
-            label: 'Keyword 3',
-            text: '/keyword 3',
-          },
-          {
             type: 'uri',
             label: 'Developer',
             uri: 'http://line.me/ti/p/~akl2340',
